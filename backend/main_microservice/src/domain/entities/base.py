@@ -38,6 +38,8 @@ class BaseEntity(abc.ABC):
                 }
             elif isinstance(obj, Iterable) and not isinstance(obj, str):
                 return [to_dict_recursive(item) for item in obj]
+            elif isinstance(obj, uuid.UUID):
+                return str(obj)
             else:
                 return obj
 
