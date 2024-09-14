@@ -16,4 +16,4 @@ ENV PYTHONPATH=/usr/backend
 
 USER api_user
 
-ENTRYPOINT ["python", "app.py"]
+ENTRYPOINT ["python", "embeddings/api.py"]
