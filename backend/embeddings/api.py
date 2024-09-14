@@ -64,7 +64,7 @@ class EmbeddingsAPI(ls.LitAPI):
         ).to(self.device)
         with torch.no_grad():
             model_output = self.model(**encoded_input)
-        return model_output[0][:, 0].tolist()
+        return model_output[0][:, 0]
 
     def encode_response(self, output, **kwargs) -> dict:
         """
