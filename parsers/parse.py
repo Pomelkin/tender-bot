@@ -24,7 +24,7 @@ def load_excel_file(file_path: str) -> pd.DataFrame | None:
 def download_file(url: str, output_folder: str) -> None:
     """Download a file from a URL and save it to the output folder"""
     try:
-        response = requests.get(url, stream=True, allow_redirects=True)
+        response = requests._get(url, stream=True, allow_redirects=True)
         response.raise_for_status()
 
         file_name = None
