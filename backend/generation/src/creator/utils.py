@@ -15,7 +15,7 @@ def genitive(word):
                 genitive_word += parsed_word.inflect({"gent"}).word.capitalize() + " "
             return genitive_word.strip()
     except Exception as e:
-        logging.error(f"{e}: {word}")
+        logging.error(f"Exception in genitive: {e}: {word}")
         return word
 
     return word

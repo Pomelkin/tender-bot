@@ -1,4 +1,3 @@
-import io
 from contextlib import asynccontextmanager
 from io import BytesIO
 
@@ -16,7 +15,7 @@ class S3Repository:
         self.session = get_session()
 
     @asynccontextmanager
-    async def get_client(self) -> AioBaseClient:
+    async def _get_client(self) -> AioBaseClient:
         config = {
             "aws_access_key_id": self.access_key,
             "aws_secret_access_key": self.secret_key,
@@ -26,9 +25,9 @@ class S3Repository:
             yield client
 
     async def get(self, file_id: str) -> BytesIO:
-        async with self.get_client() as client:
+        async with self._get_client() as client:
             response = await client.get_object(Bucket=self.bucket_name, Key=file_id)
-            buffer = io.BytesIO()
+            buffer = BytesIO()
             async with response["Body"] as stream:
                 data = await stream.read()
                 buffer.write(data)
@@ -36,7 +35,7 @@ class S3Repository:
             return buffer
 
     async def put(self, file: bytes, file_id: str) -> None:
-        async with self.get_client() as client:
+        async with self._get_client() as client:
             object_name = str(file_id)
             await client.put_object(
                 Bucket=self.bucket_name,
@@ -45,5 +44,5 @@ class S3Repository:
             )
 
     async def delete(self, file_id: str):
-        async with self.get_client() as client:
+        async with self._get_client() as client:
             await client.delete_object(Bucket=self.bucket_name, Key=file_id)

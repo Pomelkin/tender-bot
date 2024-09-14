@@ -1,7 +1,7 @@
 from io import BytesIO
 
-from generation.src.generator.generate import generate
-from generation.src.utils.readers import read_doc, read_docx, read_pdf
+from generation.src.creator.generate import Generator
+from generation.src.utils.readers import DocumentReader
 from generation.src.utils.s3 import S3Repository
 
 
@@ -11,14 +11,11 @@ async def create(document_name: str, query: str) -> BytesIO:
     file = await s3_repository.get(document_name)
     file_type = document_name.split(".")[-1]
 
-    if file_type == "pdf":
-        text = await read_doc(file)
-    elif file_type == "docx":
-        text = await read_docx(file)
-    else:
-        text = await read_pdf(file)
+    reader = DocumentReader()
+    text = await reader.read(file_type, file)
 
-    html_str = await generate(text, query)
+    generator = Generator(max_tokens=1024)
+    html_str = await generator.generate(text, query)
     file = BytesIO()
     file.write(html_str.encode("utf-8"))
     file.seek(0)
