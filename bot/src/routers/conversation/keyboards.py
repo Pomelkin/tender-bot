@@ -1,10 +1,10 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder, InlineKeyboardButton, InlineKeyboardMarkup
 
-from conversation.callback_data import DocTypeData
+from routers.conversation.callback_data import DocTypeData
 
 
-def get_main_keyboard() -> ReplyKeyboardMarkup:
+def get_generate_keyboard() -> ReplyKeyboardMarkup:
     keyboard = ReplyKeyboardBuilder()
     keyboard.row(KeyboardButton(text="Сгенерировать соглашение"))
     keyboard.adjust()

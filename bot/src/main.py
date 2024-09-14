@@ -3,12 +3,13 @@ import logging
 import sys
 
 from aiogram import Bot, Dispatcher
-from general.router import router
+from routers.general.router import router as general_router
+from routers.conversation.router import router as conversation_router
 
 from bot.src.config import settings
 
 dp = Dispatcher()
-dp.include_routers(router, )
+dp.include_routers(general_router, conversation_router)
 
 
 async def main() -> None:
