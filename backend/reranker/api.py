@@ -62,7 +62,7 @@ class CrossEncoderAPI(ls.LitAPI):
         :return: reranked documents.
         """
         features = self.tokenizer(
-            [x["query"] for _ in range(x["documents"])],
+            x["query"] * len(x["documents"]),
             x["documents"],
             padding=True,
             truncation=True,
