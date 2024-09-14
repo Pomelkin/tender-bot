@@ -3,7 +3,7 @@ import torch
 from reranker.schemas import RerankerRequest
 from reranker.config import settings
 from reranker.utils import LOGGER
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 
 class CrossEncoderAPI(ls.LitAPI):
@@ -13,7 +13,9 @@ class CrossEncoderAPI(ls.LitAPI):
 
         :param device: device to run the model on.
         """
-        self.model = AutoModel.from_pretrained(settings.model_name).to(device)
+        self.model = AutoModelForSequenceClassification.from_pretrained(
+            settings.model_name
+        ).to(device)
         self.tokenizer = AutoTokenizer.from_pretrained(settings.model_name)
         self.device = device
 
@@ -39,7 +41,7 @@ class CrossEncoderAPI(ls.LitAPI):
             padding=True,
             truncation=True,
             return_tensors="pt",
-        )
+        ).to(self.device)
         with torch.no_grad():
             _ = self.model(**features).logits
 
@@ -52,7 +54,7 @@ class CrossEncoderAPI(ls.LitAPI):
         """
         return request.model_dump()
 
-    def predict(self, x, **kwargs) -> list[str]:
+    def predict(self, x, **kwargs):
         """
         Run the model on the input and return the output.
 
@@ -65,8 +67,8 @@ class CrossEncoderAPI(ls.LitAPI):
             padding=True,
             truncation=True,
             return_tensors="pt",
-            model_max_length=512,
-        )
+            max_length=512,
+        ).to(self.device)
         with torch.no_grad():
             scores = torch.sigmoid(self.model(**features).logits).squeeze().tolist()
 
@@ -85,7 +87,7 @@ class CrossEncoderAPI(ls.LitAPI):
         if len(best_docs) == 0 and best_doc != "":
             best_docs.append(best_doc)
 
-        return best_docs
+        return ",".join(best_docs)
 
     def encode_response(self, output, **kwargs):
         """
@@ -94,7 +96,7 @@ class CrossEncoderAPI(ls.LitAPI):
         :param output: model output.
         :return: response payload.
         """
-        return {"documents": output}
+        return {"documents": output.split(",")}
 
 
 if __name__ == "__main__":
