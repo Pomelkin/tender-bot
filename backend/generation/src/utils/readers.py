@@ -5,7 +5,7 @@ from PyPDF2 import PdfReader
 #from spire.doc import Document as SpireDocument
 
 
-def read_pdf(bytesio_obj: BytesIO):
+async def read_pdf(bytesio_obj: BytesIO):
     """
     Reads a PDF from a BytesIO object and returns its text content as a string.
     """
@@ -16,7 +16,7 @@ def read_pdf(bytesio_obj: BytesIO):
     return text
 
 
-def read_docx(bytesio_obj: BytesIO):
+async def read_docx(bytesio_obj: BytesIO):
     """
     Reads a DOCX file from a BytesIO object and returns its text content as a string.
     """
@@ -27,7 +27,7 @@ def read_docx(bytesio_obj: BytesIO):
     return text
 
 
-def read_doc(bytesio_obj: BytesIO) -> str:
+async def read_doc(bytesio_obj: BytesIO) -> str:
     """
     Reads a .doc file from a BytesIO object and returns its text content as a string.
     """
