@@ -1,4 +1,4 @@
-from generation.src.generator.utils import genitive
+from generation.src.creator.utils import genitive
 
 
 async def get_html(

@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI, Response
 from fastapi.responses import FileResponse
-from generation.src.generator.create import create
+from generation.src.creator.create import create
 from generation.src.schemas import GenerationRequest
 
 app = FastAPI()
