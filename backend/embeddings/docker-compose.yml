@@ -8,7 +8,5 @@ services:
     container_name: embeddings
     ports:
       - "${API_PORT}:8000"
-    volumes:
-      - ./app:/app
     environment:
       - DEVICE_INDEX = 0
