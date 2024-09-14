@@ -71,9 +71,20 @@ class CrossEncoderAPI(ls.LitAPI):
             scores = torch.sigmoid(self.model(**features).logits).squeeze().tolist()
 
         best_docs = []
+        best_score = 0
+        best_doc = ""
+
+        # filter out documents with score below the threshold
         for score, doc in zip(scores, x["documents"]):
             if score >= settings.rerank_threshold:
                 best_docs.append(doc)
+            if score > best_score:
+                best_doc = doc
+                best_score = score
+        # If no documents are above the threshold, return the best document
+        if len(best_docs) == 0 and best_doc != "":
+            best_docs.append(best_doc)
+
         return best_docs
 
     def encode_response(self, output, **kwargs):
