@@ -4,7 +4,6 @@ from pydantic import Field
 
 class APISettings(BaseSettings):
     port: int = Field(alias="EMB_API_PORT", default=8000)
-    host: str = Field(alias="EMB_API_HOST", default="localhost")
 
 
 class Settings(BaseSettings):
