@@ -39,7 +39,7 @@ class CrossEncoderAPI(ls.LitAPI):
             padding=True,
             truncation=True,
             return_tensors="pt",
-        )
+        ).to(self.device)
         with torch.no_grad():
             _ = self.model(**features).logits
 
@@ -66,7 +66,7 @@ class CrossEncoderAPI(ls.LitAPI):
             truncation=True,
             return_tensors="pt",
             model_max_length=512,
-        )
+        ).to(self.device)
         with torch.no_grad():
             scores = torch.sigmoid(self.model(**features).logits).squeeze().tolist()
 
