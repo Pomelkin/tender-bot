@@ -45,7 +45,7 @@ class CrossEncoderAPI(ls.LitAPI):
         with torch.no_grad():
             _ = self.model(**features).logits
 
-    def decode_request(self, request: RerankerRequest, **kwargs) -> dict:
+    def decode_request(self, request: RerankerRequest, **kwargs):
         """
         Decode the request payload to the model input.
 
@@ -61,6 +61,7 @@ class CrossEncoderAPI(ls.LitAPI):
         :param x: model input.
         :return: reranked documents.
         """
+        print(x)
         features = self.tokenizer(
             x["query"] * len(x["documents"]),
             x["documents"],
