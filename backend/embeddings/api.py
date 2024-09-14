@@ -64,7 +64,7 @@ class EmbeddingsAPI(ls.LitAPI):
         ).to(self.device)
         with torch.no_grad():
             model_output = self.model(**encoded_input)
-        return model_output[0][:, 0].tolist()
+        return model_output[0][:, 0]
 
     def encode_response(self, output, **kwargs) -> dict:
         """
@@ -89,8 +89,6 @@ if __name__ == "__main__":
         api_path="/v1/embeddings",
         accelerator="gpu",
         devices=[settings.device_index],
-        max_batch_size=8,
-        batch_timeout=0.05,
     )
     server.run(
         port=settings.api.port,

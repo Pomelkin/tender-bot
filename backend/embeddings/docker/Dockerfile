@@ -5,7 +5,7 @@ RUN addgroup --gid 10001 api_user && \
 
 WORKDIR /usr/backend/embeddings
 
-COPY --chown=api_user:api_user ./requirements.txt ./requirements.txt
+COPY --chown=api_user:api_user ./requirements.txt .
 
 RUN pip install --no-cache-dir torch && \
     pip install --no-cache-dir -r requirements.txt
@@ -16,4 +16,4 @@ ENV PYTHONPATH=/usr/backend
 
 USER api_user
 
-ENTRYPOINT ["python", "embeddings/api.py"]
+ENTRYPOINT ["python", "api.py"]
