@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  embeddings:
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile
+    container_name: embeddings
+    ports:
+      - "${API_PORT}:8000"
+    volumes:
+      - ./app:/app
+    environment:
+      - DEVICE_INDEX = 0
