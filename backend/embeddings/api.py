@@ -80,3 +80,18 @@ class EmbeddingsAPI(ls.LitAPI):
         return EmbeddingsResponse(
             data=embeddings, model=settings.model_name
         ).model_dump()
+
+
+if __name__ == "__main__":
+    api = EmbeddingsAPI()
+    server = ls.LitServer(
+        api,
+        api_path="/v1/embeddings",
+        accelerator="gpu",
+        devices=[settings.device_index],
+        max_batch_size=8,
+        batch_timeout=0.05,
+    )
+    server.run(
+        port=settings.api.port,
+    )

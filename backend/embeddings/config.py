@@ -9,6 +9,7 @@ class APISettings(BaseSettings):
 
 class Settings(BaseSettings):
     model_name: str = "deepvk/USER-bge-m3"
+    device_index: int
     api: APISettings = APISettings()
 
 
