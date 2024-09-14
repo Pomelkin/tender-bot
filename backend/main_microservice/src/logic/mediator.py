@@ -9,6 +9,7 @@ from logic.exceptions.mediator import (
     EventHandlersNotRegisteredException,
     CommandHandlersNotRegisteredException,
 )
+from logic.queries.base import BaseQuery, BaseQueryHandler
 
 
 @dataclass
