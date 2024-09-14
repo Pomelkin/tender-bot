@@ -3,7 +3,7 @@ import torch
 from reranker.schemas import RerankerRequest
 from reranker.config import settings
 from reranker.utils import LOGGER
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 
 class CrossEncoderAPI(ls.LitAPI):
@@ -13,7 +13,9 @@ class CrossEncoderAPI(ls.LitAPI):
 
         :param device: device to run the model on.
         """
-        self.model = AutoModel.from_pretrained(settings.model_name).to(device)
+        self.model = AutoModelForSequenceClassification.from_pretrained(
+            settings.model_name
+        ).to(device)
         self.tokenizer = AutoTokenizer.from_pretrained(settings.model_name)
         self.device = device
 
@@ -41,8 +43,7 @@ class CrossEncoderAPI(ls.LitAPI):
             return_tensors="pt",
         ).to(self.device)
         with torch.no_grad():
-            _ = self.model(**features)
-            print(_)
+            _ = self.model(**features).logits
 
     def decode_request(self, request: RerankerRequest, **kwargs) -> dict:
         """
