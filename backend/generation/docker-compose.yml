@@ -1,0 +1,10 @@
+services:
+  generation:
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile
+    env_file:
+      - .env
+    container_name: generation
+    ports:
+      - "8000:8000"
