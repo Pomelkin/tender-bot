@@ -42,7 +42,6 @@ class CrossEncoderAPI(ls.LitAPI):
         ).to(self.device)
         with torch.no_grad():
             _ = self.model(**features)
-            _ = _.logits
             print(_)
 
     def decode_request(self, request: RerankerRequest, **kwargs) -> dict:
