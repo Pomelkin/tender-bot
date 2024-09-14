@@ -12,7 +12,7 @@ from PyPDF2 import PdfReader
 from spire.doc import Document as SpireDocument
 
 
-def load_excel_file(file_path: str) -> pd.DataFrame:
+def load_excel_file(file_path: str) -> pd.DataFrame | None:
     """Load Excel file into a pandas DataFrame"""
     try:
         return pd.read_excel(file_path)
@@ -77,10 +77,9 @@ def parse_files_to_txt(input_folder: str, output_folder: str) -> None:
             file_extension = file_path.suffix.lower()
 
             if file_extension == ".doc":
-                with open(file_path, "rb") as f:
-                    text = doc_reader(f)
+                text = doc_reader(str(file_path))
             elif file_extension == ".docx":
-                document = docx.Document(file_path)
+                document = docx.Document(str(file_path))
                 text = "\n".join([paragraph.text for paragraph in document.paragraphs])
             elif file_extension == ".pdf":
                 with open(file_path, "rb") as f:
@@ -90,32 +89,27 @@ def parse_files_to_txt(input_folder: str, output_folder: str) -> None:
                 continue
 
             output_file_path = Path(output_folder) / f"{file_name}.txt"
-            with open(output_file_path, "w") as f:
+            with open(output_file_path, "w", encoding="utf-8") as f:
                 f.write(text)
 
             print(f"Parsed {file_name} to txt")
 
 
-def doc_reader(doc_bytes: BinaryIO) -> str:
-    # your existing function
-    with tempfile.NamedTemporaryFile(delete=True, suffix=".doc") as tmp:
-        tmp.write(doc_bytes.read())
-        tmp.seek(0)
+def doc_reader(path_file: str) -> str:
+    document = SpireDocument()
+    document.LoadFromFile(path_file)
 
-        document = SpireDocument()
-        document.LoadFromFile(tmp.name)
-
-        text = document.GetText()
-        return text[71:]
+    text = document.GetText()
+    return text[71:]
 
 
 if __name__ == "__main__":
     print("Current working directory:", os.getcwd())
 
-    file_path = Path("../documents/data.xlsx").resolve()
-    url_column_name = "url"
-    output_folder = Path("../documents/docs").resolve()
-    download_files_from_excel(str(file_path), url_column_name, str(output_folder))
+    # file_path = Path("../documents/data.xlsx").resolve()
+    # url_column_name = "url"
+    # output_folder = Path("../documents/docs").resolve()
+    # download_files_from_excel(str(file_path), url_column_name, str(output_folder))
 
     input_folder = Path("../documents/docs").resolve()
     output_folder = Path("../documents/txts").resolve()
