@@ -8,4 +8,4 @@ services:
       - "6333:6333"
       - "6334:6334"
     volumes:
-      - $(PWD)/qdrant_storage:/qdrant/storage:z
+      - $PWD/qdrant_storage:/qdrant/storage:z
