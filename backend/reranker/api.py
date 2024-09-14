@@ -61,9 +61,6 @@ class CrossEncoderAPI(ls.LitAPI):
         :param x: model input.
         :return: reranked documents.
         """
-        print(x)
-        print([x["query"] for _ in range(len(x["documents"]))])
-        print(x["documents"])
         features = self.tokenizer(
             [x["query"] for _ in range(len(x["documents"]))],
             x["documents"],
@@ -90,7 +87,7 @@ class CrossEncoderAPI(ls.LitAPI):
         if len(best_docs) == 0 and best_doc != "":
             best_docs.append(best_doc)
 
-        return ",".join(best_docs)
+        return best_docs
 
     def encode_response(self, output, **kwargs):
         """
@@ -99,7 +96,7 @@ class CrossEncoderAPI(ls.LitAPI):
         :param output: model output.
         :return: response payload.
         """
-        return {"documents": output.split(",")}
+        return {"documents": output}
 
 
 if __name__ == "__main__":
