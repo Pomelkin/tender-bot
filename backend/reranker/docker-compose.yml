@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  reranker:
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile
+    container_name: reranker
+    ports:
+    - "${API_PORT}:8000"
+    environment:
+    - DEVICE_INDEX = 0
