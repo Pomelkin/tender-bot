@@ -54,7 +54,7 @@ class CrossEncoderAPI(ls.LitAPI):
         """
         return request.model_dump()
 
-    def predict(self, x, **kwargs) -> list[str]:
+    def predict(self, x, **kwargs):
         """
         Run the model on the input and return the output.
 
@@ -87,7 +87,7 @@ class CrossEncoderAPI(ls.LitAPI):
         if len(best_docs) == 0 and best_doc != "":
             best_docs.append(best_doc)
 
-        return best_docs
+        return ",".join(best_docs)
 
     def encode_response(self, output, **kwargs):
         """
@@ -96,7 +96,7 @@ class CrossEncoderAPI(ls.LitAPI):
         :param output: model output.
         :return: response payload.
         """
-        return {"documents": output}
+        return {"documents": output.split(",")}
 
 
 if __name__ == "__main__":
