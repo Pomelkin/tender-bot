@@ -1,7 +1,7 @@
 from generation.src.generator.utils import genitive
 
 
-def get_html(
+async def get_html(
     date: str,
     number: str,
     place: str,
@@ -92,10 +92,9 @@ def get_html(
 
         <p class=MsoNormal style='text-align:justify;text-indent:35.45pt;border:none'><b><span
         lang=RU style='font-size:12.0pt;color:black'>{party_2}</span></b><span lang=RU style='font-size:
-        12.0pt;color:black'>, именуемое в дальнейшем<b> «Исполнитель», </b>в лице {genitive(position_2)}
-        {genitive(party_2)}, действующего на основании ____________, с другой
+        12.0pt;color:black'>, именуемое в дальнейшем<b> «Исполнитель», </b>в лице {genitive(position_2)} {genitive(name_2)}, действующего на основании ____________, с другой
         стороны, вместе именуемые «Стороны» и каждый в отдельности «Сторона»,<b> </b>заключили
-        настоящее Дополнительное соглашение к к договору от {date} № {number} (далее – Договор) о нижеследующем:</span></p>
+        настоящее Дополнительное соглашение к договору от {date} № {number} (далее – Договор) о нижеследующем:</span></p>
 
         <p class=MsoNormal style='margin-left:0in;text-align:justify;text-indent:35.45pt;
         border:none'><span lang=RU style='font-size:12.0pt;color:black'>1.<span

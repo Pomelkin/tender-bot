@@ -11,7 +11,7 @@ from generation.src.generator.prompts import (
 )
 
 
-def author_generate(system_message, user_message, max_tokens=1024) -> str:
+async def author_generate(system_message, user_message, max_tokens=1024) -> str:
     completion = client_author.chat.completions.create(
         model="Qwen/Qwen2-7B-Instruct",
         messages=[
@@ -25,7 +25,7 @@ def author_generate(system_message, user_message, max_tokens=1024) -> str:
     return completion.choices[0].message.content
 
 
-def editor_generate(user_message, max_tokens=1024) -> str:
+async def editor_generate(user_message, max_tokens=1024) -> str:
     completion = client_editor.chat.completions.create(
         model="google/gemma-2-9b-it",
         messages=[{"role": "user", "content": user_message}],
@@ -36,17 +36,17 @@ def editor_generate(user_message, max_tokens=1024) -> str:
     return completion.choices[0].message.content
 
 
-def generate(text, query) -> str:
-    author_generation = author_generate(
+async def generate(text, query) -> str:
+    author_generation = await author_generate(
         system_message=author_system_prompt,
         user_message=author_prompt.format(query, text),
     )
 
-    editor_generation = editor_generate(
+    editor_generation = await editor_generate(
         user_message=editor_prompt.format(query, author_generation)
     )
 
-    entities_str = author_generate(
+    entities_str = await editor_generate(
         user_message=entity_extractor_prompt.format(text[:2000] + text[-500:])
     )
 
@@ -75,7 +75,7 @@ def generate(text, query) -> str:
 
     date = datetime.now().strftime("%d.%m.%y")
 
-    html_str = get_html(
+    html_str = await get_html(
         date=date,
         number=number,
         place=place,

@@ -5,20 +5,20 @@ from generation.src.utils.readers import read_doc, read_docx, read_pdf
 from generation.src.utils.s3 import S3Repository
 
 
-def create(document_name: str, query: str) -> BytesIO:
+async def create(document_name: str, query: str) -> BytesIO:
     s3_repository = S3Repository()
 
-    file = s3_repository.get(document_name)
+    file = await s3_repository.get(document_name)
     file_type = document_name.split(".")[-1]
 
     if file_type == "pdf":
-        text = read_doc(file)
+        text = await read_doc(file)
     elif file_type == "docx":
-        text = read_docx(file)
+        text = await read_docx(file)
     else:
-        text = read_pdf(file)
+        text = await read_pdf(file)
 
-    html_str = generate(text, query)
+    html_str = await generate(text, query)
     file = BytesIO()
     file.write(html_str.encode("utf-8"))
     file.seek(0)
