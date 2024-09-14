@@ -5,10 +5,11 @@ from domain.entities.version import Version
 
 
 @dataclass
-class DocumentGeneration(ABC):
+class BaseDocumentGeneration(ABC):
     host: str
     port: int
 
     @abstractmethod
     async def generate_document_with_prev_version(self, document_id: str, message: str, prev_version_url: str) -> Version: ...
-    async def generate_document(self, document_id: str, message: str) -> Version: ...
+    @abstractmethod
+    async def generate_document(self, document_name: str, message: str) -> Version: ...

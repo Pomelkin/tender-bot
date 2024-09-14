@@ -1,31 +1,21 @@
-from typing import Annotated
-
-from fastapi import Depends, Header, HTTPException, status
-from punq import Container
 from pydantic import BaseModel
 
-from domain.exceptions.base import ApplicationException
-from logic import init_container
+from domain.entities.version import Version
 
 
 class ErrorSchema(BaseModel):
     error: str
 
 
-class ConsultationRequestSchema(BaseModel):
-    document_id: str
-    message: str
-
-
-class ConsultationResponseSchema(BaseModel):
-    message: str
-
-
 class GenerateDocumentRequestSchema(BaseModel):
     user_id: int
-    document_id: str
+    document_name: str
     message: str
 
 
 class GenerateDocumentResponseSchema(BaseModel):
-    message: str
+    version_url: str
+
+    @classmethod
+    def from_entity(cls, version: Version):
+        return cls(version_url=version.version)
