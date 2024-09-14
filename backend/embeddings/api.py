@@ -89,8 +89,6 @@ if __name__ == "__main__":
         api_path="/v1/embeddings",
         accelerator="gpu",
         devices=[settings.device_index],
-        batch_timeout=0.05,
-        max_batch_size=2,
     )
     server.run(
         port=settings.api.port,
