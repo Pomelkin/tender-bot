@@ -1,8 +1,15 @@
-async def create_knowledge_base(input: DocumentsInput) -> None:
-    vault_id = input.vault_id
-    documents = input.documents
+import logging
+import time
+import uuid
+from typing import List
 
-    if await qdrant_store.collection_exists(vault_id):
+from rag.src.vector_db.core import qdrant_instance
+from rag.src.vector_db.queries import create_collection, upsert_document
+
+
+async def create_knowledge_base(file_path: str) -> None:
+
+    if await qdrant_instance.collection_exists(file_path):
         raise ValueError("Knowledge base already exists")
 
     relations = await request_relation_extraction(documents)
@@ -22,24 +29,23 @@ async def fill_new_kb(vault_id: UUID, prepared_docs: PreparedToUpsertDocuments) 
     await upsert_document(vault_id, prepared_docs)
 
 
-async def request_relation_extraction(
-        documents: List[Document],
-) -> PreparedToUpsertDocuments:
+async def request_relation_extraction(file_path: str) -> PreparedToUpsertDocuments:
     start_time = time.perf_counter()
 
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-    docs = (splitter.create_documents([document.text],
-                                      metadatas=[{"document_id": document.document_id,
-                                                  "document_name": document.document_name}]) for document in documents)
+    # splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+    # docs = (splitter.create_documents([document.text],
+    #                                   metadatas=[{"document_id": document.document_id,
+    #                                               "document_name": document.document_name}]) for document in documents)
+    #
+    # flat_docs_list = [item for sublist in docs for item in sublist]
 
-    flat_docs_list = [item for sublist in docs for item in sublist]
     prepared_docs = {"ids": [], 'payloads': [], 'vectors': []}
 
     result = await create_embeddings(list(map(lambda x: x.page_content, flat_docs_list)))
 
     for num, doc in enumerate(flat_docs_list):
         prepared_docs['payloads'].append(
-            {'page_content': doc.page_content, **doc.metadata})
+            {'page_content': doc.page_content})
         prepared_docs["ids"].append(str(uuid.uuid4()))
         prepared_docs['vectors'].append(result[num])
 

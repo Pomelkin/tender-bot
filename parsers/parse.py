@@ -111,6 +111,6 @@ if __name__ == "__main__":
     # output_folder = Path("../documents/docs").resolve()
     # download_files_from_excel(str(file_path), url_column_name, str(output_folder))
 
-    input_folder = Path("../documents/docs").resolve()
-    output_folder = Path("../documents/txts").resolve()
+    input_folder = Path("../documents/raw").resolve()
+    output_folder = Path("../documents/final").resolve()
     parse_files_to_txt(str(input_folder), str(output_folder))
