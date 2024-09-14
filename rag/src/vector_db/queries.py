@@ -3,12 +3,14 @@ from uuid import UUID
 from core import qdrant_instance
 from qdrant_client.http.models import models, VectorParams
 
-
-async def upsert_document(vault_id: UUID, prepared_docs: PreparedToUpsertDocuments):
-    await qdrant_instance.upsert(vault_id, points=models.Batch(**prepared_docs.model_dump(mode="json")))
+from schemas import PreparedToUpsertDocuments
 
 
-async def create_collection(vault_id: UUID):
+async def upsert_document(file_name: str, prepared_docs: PreparedToUpsertDocuments):
+    await qdrant_instance.upsert(file_name, points=models.Batch(**prepared_docs.model_dump(mode="json")))
+
+
+async def create_collection(vault_id: str):
     await qdrant_instance.create_collection(vault_id, vectors_config=VectorParams(size=384,
                                                                                   distance=models.Distance.COSINE))
 
