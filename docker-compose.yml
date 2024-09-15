@@ -113,7 +113,7 @@ services:
     environment:
       BASE_URL_GENERATE: http://main-tender-bot:8000
       BASE_URL_RAG: http://rag:8000
-      FRONT_URL: tender-web-nginx:8000
+      FRONT_URL: pomelk1n-dev.su
     env_file:
       - bot/.env
     container_name: bot
