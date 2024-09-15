@@ -35,6 +35,7 @@ async def generate_agreement_handler(message: types.Message, state: FSMContext):
 async def get_conversation_handler(message: types.Message, state: FSMContext):
     data = await state.get_data()
     document_id = data["document_id"]
+    document_id += ".txt"
     response = await send_user_query({"vault_id": document_id, "query": message.text})
     await message.answer(response["content"])
 
@@ -66,7 +67,7 @@ async def create_agreement_handler(message: types.Message, state: FSMContext):
 async def process_agreement_to_file(query: types.CallbackQuery, callback_data: DocTypeData, state: FSMContext):
     await query.answer()
     data = await state.get_data()
-    current_url = data["current_url"]
+    current_url = data.get("current_url", "https://ada3e274-df6e-4a1b-baf6-4d7c15a24e2c.selstorage.ru/8b3013b7-02fd-4b15-b88d-0cc6336f03b0.html")
 
     if callback_data.type == "pdf":
         create_pdf(current_url)
