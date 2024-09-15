@@ -29,7 +29,9 @@ services:
       - mongodb
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.main-tender-bot.rule=Host(`app.pomelk1n-dev.su`)"
+      - "traefik.http.routers.main-tender-bot.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/main-tender-bot`)"
+      - "traefik.http.routers.main-tender-bot.middlewares=main-tender-bot-strip"
+      - "traefik.http.middlewares.main-tender-bot-strip.stripprefix.prefixes=/main-tender-bot"
       - "traefik.http.services.main-tender-bot.loadbalancer.server.port=8000"
 
   generation:
@@ -44,7 +46,9 @@ services:
       - "8000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.generation.rule=Host(`generation.pomelk1n-dev.su`)"
+      - "traefik.http.routers.generation.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/generation`)"
+      - "traefik.http.routers.generation.middlewares=generation-strip"
+      - "traefik.http.middlewares.generation-strip.stripprefix.prefixes=/generation"
       - "traefik.http.services.generation.loadbalancer.server.port=8000"
     networks:
       tender-bot:
@@ -78,7 +82,9 @@ services:
       - "8000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.rag.rule=Host(`rag.pomelk1n-dev.su`)"
+      - "traefik.http.routers.rag.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/rag`)"
+      - "traefik.http.routers.rag.middlewares=rag-strip"
+      - "traefik.http.middlewares.rag-strip.stripprefix.prefixes=/rag"
       - "traefik.http.services.rag.loadbalancer.server.port=8000"
     networks:
       tender-bot:
@@ -110,6 +116,12 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bot.rule=Host(`bot.pomelk1n-dev.su`)"
+      - "traefik.http.services.bot.loadbalancer.server.port=8000"
+
+      - "traefik.enable=true"
+      - "traefik.http.routers.bot.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/bot`)"
+      - "traefik.http.routers.bot.middlewares=bot-strip"
+      - "traefik.http.middlewares.bot-strip.stripprefix.prefixes=/bot"
       - "traefik.http.services.bot.loadbalancer.server.port=8000"
     networks:
       tender-bot:
