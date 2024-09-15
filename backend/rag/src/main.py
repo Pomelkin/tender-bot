@@ -5,4 +5,5 @@ from rag.qa_router.router import router as qa_router
 app = FastAPI()
 app.include_router(qa_router)
 
-uvicorn.run(app)
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
