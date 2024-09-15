@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import InputFile, FSInputFile
 from fastapi import HTTPException
 
-from bot.src.routers.conversation.requests import delete_old_versions
+from routers.conversation.requests import delete_old_versions
 from config import settings
 from routers.conversation.callback_data import DocTypeData
 from routers.conversation.fsm import Document
