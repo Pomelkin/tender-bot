@@ -1,6 +1,7 @@
 from io import BytesIO
 
 import docx
+from bs4 import BeautifulSoup
 from PyPDF2 import PdfReader
 
 # from spire.doc import Document as SpireDocument
@@ -38,6 +39,15 @@ class DocumentReader:
         return text[71:]"""
         pass
 
+    async def _read_html(self, bytesio_obj: BytesIO) -> str:
+        """
+        Reads an HTML file from a BytesIO object and returns its text content as a string.
+        """
+        html_str = bytesio_obj.getvalue().decode("utf-8")
+        soup = BeautifulSoup(html_str, "html.parser")
+        text = soup.get_text()
+        return text
+
     async def read(self, file_type: str, bytesio_obj: BytesIO) -> str:
         """
         Reads a document from a BytesIO object and returns its text content as a string.
@@ -49,6 +59,8 @@ class DocumentReader:
             return await self._read_docx(bytesio_obj)
         elif file_type == "doc":
             return await self._read_doc(bytesio_obj)
+        elif file_type == "html":
+            return await self._read_html(bytesio_obj)
         else:
             raise ValueError(f"Unsupported file type: {file_type}")
 

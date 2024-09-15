@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 
-from generation.src.creator.clients import client_author, client_editor
+from generation.src.utils.clients import client_author, client_editor
 from generation.src.creator.html import get_html
 from generation.src.creator.prompts import (
     author_prompt,
