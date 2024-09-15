@@ -1,5 +1,6 @@
-from rag.config import settings
 import aiohttp
+
+from rag.config import settings
 
 
 class Reranker:
@@ -8,8 +9,9 @@ class Reranker:
     """
 
     def __init__(self):
-        self.url = f"http://{settings.host}:{settings.port}/v1/reranker"
-        self.aiohttp_session = aiohttp.ClientSession()
+        self.url = (
+            f"http://{settings.reranker.host}:{settings.reranker.port}/v1/reranker"
+        )
 
     async def rerank(self, query: str, documents: list[str]) -> list[str]:
         """
@@ -19,7 +21,8 @@ class Reranker:
         :param documents: List of documents to rerank.
         :return: List of reranked documents
         """
-        async with self.aiohttp_session as session:
+
+        async with aiohttp.ClientSession() as session:
             async with session.post(
                 self.url, json={"query": query, "documents": documents}
             ) as response:

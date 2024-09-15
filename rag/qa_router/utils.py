@@ -19,10 +19,10 @@ async def generate_answer(input: Input):
     embedding = await create_embedding(input.query)
 
     result_from_doc = await search_relevant_chunks(
-        vault_id=input.vault_id, vector=embedding, top_k=5
+        vault_id=input.vault_id, vector=embedding, top_k=6
     )
     result_from_fz = await search_relevant_chunks(
-        vault_id=settings.qdrant.fz44, vector=embedding, top_k=5
+        vault_id=settings.qdrant.fz44, vector=embedding, top_k=6
     )
 
     doc_payloads = [x.page_content for x in result_from_doc]
