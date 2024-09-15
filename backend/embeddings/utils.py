@@ -48,7 +48,7 @@ def cuda_cache_manager():
                 > 0.4
             ):
                 LOGGER.info(
-                    f"Starting cache clear: current memory usage: {torch.cuda.memory_reserved(settings.device) / 1024**2} MB"
+                    f"Starting cache clear: current memory usage: {torch.cuda.memory_reserved(settings.device_index) / 1024**2} MB"
                 )
                 torch.cuda.empty_cache()
                 LOGGER.info("Cache cleared")
