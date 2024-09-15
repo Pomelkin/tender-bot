@@ -9,7 +9,7 @@ class APISettings(BaseSettings):
 class Settings(BaseSettings):
     model_name: str = "DiTy/cross-encoder-russian-msmarco"
     device_index: int
-    rerank_threshold: float = 0.7
+    rerank_threshold: float = 0.4
     api: APISettings = APISettings()
 
 

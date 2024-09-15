@@ -49,7 +49,7 @@ class Generator:
             str: The generated text.
         """
         completion = await client_editor.chat.completions.create(
-            model="google/gemma-2-9b-it",
+            model="google/gemma-2-27b-it",
             messages=[{"role": "user", "content": user_message}],
             max_tokens=max_tokens,
             temperature=0.0,

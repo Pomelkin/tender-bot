@@ -50,3 +50,17 @@ class UploadNewVersionHandler(CommandHandler[UploadNewVersion, None]):
         await self.s3.upload_new_version(new_version)
         new_version.version = self.s3.create_get_url(file_name=str(new_version.id) + ".html")
         await self.document_repository.add_new_version(document_name=command.document_name, version=new_version, user_id=command.user_id)
+
+
+@dataclass(frozen=True)
+class DeleteVersions(BaseCommand):
+    user_id: int
+    document_name: str
+
+
+@dataclass(frozen=True)
+class DeleteVersionsHandler(CommandHandler[DeleteVersions, None]):
+    document_repository: BaseDocumentRepository
+
+    async def handle(self, command: DeleteVersions) -> None:
+        await self.document_repository.delete_answers(command.document_name, command.user_id)

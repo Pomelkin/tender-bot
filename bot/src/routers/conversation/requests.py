@@ -34,3 +34,8 @@ async def send_create_agreement(data: dict) -> dict:
     logging.info(f"{settings.BASE_URL_GENERATE}/generate-document")
     async with send(f"{settings.BASE_URL_GENERATE}/generate-document", "POST", data) as resp:
         return await resp.json()
+
+
+async def delete_old_versions(data: dict) -> tuple[int, dict]:
+    async with send(f"{settings.BASE_URL_GENERATE}/delete-versions", "DELETE", data) as resp:
+        return resp.status, await resp.json()

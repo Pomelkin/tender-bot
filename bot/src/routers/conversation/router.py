@@ -5,6 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import InputFile, FSInputFile
 from fastapi import HTTPException
 
+from routers.conversation.requests import delete_old_versions
 from config import settings
 from routers.conversation.callback_data import DocTypeData
 from routers.conversation.fsm import Document
@@ -29,6 +30,16 @@ async def get_document_handler(message: types.Message, state: FSMContext):
 async def generate_agreement_handler(message: types.Message, state: FSMContext):
     await message.answer("Напишите структурированное и понятное описание для создания Дополнительного Согласения")
     await state.set_state(Document.create_agreement)
+
+
+@router.message(Document.conversation, F.text.lower() == "удалить старые версии")
+async def delete_old_versions_handler(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    data.update({"document_name": data.pop("document_id")})
+    data['user_id'] = message.from_user.id
+    response = await delete_old_versions(data)
+    if 199 < response[0] < 300:
+        await message.answer("История успешно удалена")
 
 
 @router.message(Document.conversation)

@@ -26,3 +26,8 @@ class GenerateDocumentResponseSchema(BaseModel):
 class NewVersionRequestSchema(BaseModel):
     user_id: int
     document_name: str
+
+
+class DeleteVersionsRequestSchema(BaseModel):
+    user_id: int
+    document_name: str
