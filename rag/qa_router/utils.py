@@ -1,18 +1,16 @@
 import logging
 from typing import List
-
 from openai import AsyncClient
-
 from rag.qa_router.prompts import USER_PROMPT_QA, SYSTEM_PROMPT_QA
 from rag.qa_router.schemas import Input
 from rag.vector_db.queries import search_relevant_chunks
-
+from rag.config import settings
 from rag.qa_router.schemas import Answer
 
-embeddings_url = "http://pomelk1n-dev.su:8005/v1/"
-llm_url = "http://pomelk1n-dev.su:8000/v1"
+embeddings_url = f"http://{settings.embeddings.host}:{settings.embeddings.port}/v1/"
+llm_url = f"http://{settings.gemma2.host}:{settings.gemma2.port}/v1"
 
-openai_client = AsyncClient(base_url="http://example.com", api_key="password")
+openai_client = AsyncClient(base_url=embeddings_url, api_key="password")
 
 
 async def generate_answer(input: Input):

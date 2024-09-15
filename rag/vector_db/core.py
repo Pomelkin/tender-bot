@@ -1,3 +1,6 @@
 from qdrant_client import AsyncQdrantClient
+from rag.config import settings
 
-qdrant_instance = AsyncQdrantClient("http://185.209.115.240/", port=6333)
+qdrant_instance = AsyncQdrantClient(
+    f"http://{settings.qdrant.host}/", port=settings.qdrant.port
+)

@@ -9,13 +9,14 @@ from typing import List
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from openai import AsyncClient
-
+from rag.config import settings
 from rag.vector_db.core import qdrant_instance
 from rag.vector_db.queries import create_collection, upsert_document
 from rag.src.schemas import PreparedToUpsertDocuments
 
 openai_client = AsyncClient(
-    base_url="http://pomelk1n-dev.su:8005/v1/", api_key="password"
+    base_url=f"http://{settings.embeddings.host}:{settings.embeddings.port}/v1/",
+    api_key="password",
 )
 
 
