@@ -43,8 +43,7 @@ def cuda_cache_manager():
             result = func(*args, **kwargs)
             if (
                 torch.cuda.memory_reserved(settings.device_index)
-                / 1024**2
-                * get_total_vram(settings.device_index)
+                / (1024**2 * get_total_vram(settings.device_index))
                 > 0.6
             ):
                 LOGGER.info(
