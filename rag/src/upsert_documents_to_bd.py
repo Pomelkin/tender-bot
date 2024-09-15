@@ -1,4 +1,6 @@
+import asyncio
 import logging
+import os
 import re
 import time
 import uuid
@@ -6,10 +8,13 @@ from typing import List
 
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from openai import AsyncClient
 
 from rag.src.vector_db.core import qdrant_instance
 from rag.src.vector_db.queries import create_collection, upsert_document
 from schemas import PreparedToUpsertDocuments
+
+openai_client = AsyncClient(base_url="http://pomelk1n-dev.su:8005/v1/", api_key="password")
 
 
 async def create_knowledge_base(file_path: str) -> None:
@@ -18,12 +23,15 @@ async def create_knowledge_base(file_path: str) -> None:
 
     docs = await process_document(file_path)
 
-    await fill_new_kb(file_path, docs)
+    file_name_with_extension = os.path.basename(file_path)
+
+    print(file_name_with_extension)
+    await fill_new_kb(file_name_with_extension, docs)
 
 
 async def create_embeddings(texts: List[str] | str) -> List[List[float]]:
     texts = list(map(lambda x: x.replace("\n", " "), texts))
-    response = await settings.openai_client.embeddings.create(input=texts, model=" ")
+    response = await openai_client.embeddings.create(input=texts, model="")
     vectors = list(map(lambda x: x.embedding, response.data))
     return vectors
 
@@ -52,7 +60,7 @@ def parse_contract(text):
 async def process_document(file_path: str) -> PreparedToUpsertDocuments:
     start_time = time.perf_counter()
 
-    with open(file_path) as f:
+    with open(file_path, encoding="utf-8", errors="ignore") as f:
         file_text = f.read()
 
     text_splitter = RecursiveCharacterTextSplitter(
@@ -87,3 +95,5 @@ async def process_document(file_path: str) -> PreparedToUpsertDocuments:
     )
 
     return PreparedToUpsertDocuments(**prepared_docs)
+
+asyncio.run(create_knowledge_base(r"C:\Users\desktop\PycharmProjects\tender-bot\documents\final\24000014.docx.txt"))
