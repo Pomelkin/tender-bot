@@ -105,7 +105,7 @@ services:
       BASE_URL_GENERATE: generate
       BASE_URL_RAG: rag
     env_file:
-      - .env
+      - bot/.env
     container_name: bot
     labels:
       - "traefik.enable=true"
