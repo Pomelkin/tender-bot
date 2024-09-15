@@ -107,6 +107,9 @@ services:
     env_file:
       - .env
     container_name: bot
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rag.rule=Host(`bot.localhost`)"
     networks:
       tender-bot:
 
