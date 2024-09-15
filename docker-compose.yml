@@ -29,7 +29,7 @@ services:
       - mongodb
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.tender.rule=Host(`app.localhost`)"
+      - "traefik.http.routers.tender.rule=Host(`app.pomelk1n-dev.su`)"
       - "traefik.http.services.tender.loadbalancer.server.port=8000"
 
   generation:
@@ -44,7 +44,7 @@ services:
       - "8000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.generation.rule=Host(`generation.localhost`)"
+      - "traefik.http.routers.generation.rule=Host(`generation.pomelk1n-dev.su`)"
       - "traefik.http.services.generation.loadbalancer.server.port=8000"
     networks:
       tender-bot:
@@ -78,7 +78,7 @@ services:
       - "8000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.rag.rule=Host(`rag.localhost`)"
+      - "traefik.http.routers.rag.rule=Host(`rag.pomelk1n-dev.su`)"
       - "traefik.http.services.rag.loadbalancer.server.port=8000"
     networks:
       tender-bot:
@@ -109,7 +109,7 @@ services:
     container_name: bot
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bot.rule=Host(`bot.localhost`)"
+      - "traefik.http.routers.bot.rule=Host(`bot.pomelk1n-dev.su`)"
       - "traefik.http.services.rag.loadbalancer.server.port=8000"
     networks:
       tender-bot:
