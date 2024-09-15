@@ -41,7 +41,7 @@ services:
       context: ./backend/generation/
       dockerfile: docker/Dockerfile
     environment:
-      RAG_SERVICE_URL: http://rag
+      RAG_SERVICE_URL: http://rag:8000
     env_file:
       - backend/generation/.env
     ports:
