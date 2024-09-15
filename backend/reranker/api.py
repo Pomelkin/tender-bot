@@ -84,6 +84,8 @@ class CrossEncoderAPI(ls.LitAPI):
             if score > best_score:
                 best_doc = doc
                 best_score = score
+            # debug
+            print(score)
         # If no documents are above the threshold, return the best document
         if len(best_docs) == 0 and best_doc != "":
             best_docs.append(best_doc)
