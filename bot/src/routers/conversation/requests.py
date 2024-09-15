@@ -31,5 +31,6 @@ async def send_user_query(data: dict) -> dict:
 
 
 async def send_create_agreement(data: dict) -> dict:
+    logging.info(f"{settings.BASE_URL_GENERATE}/generate-document")
     async with send(f"{settings.BASE_URL_GENERATE}/generate-document", "POST", data) as resp:
         return await resp.json()
