@@ -35,6 +35,7 @@ async def generate_agreement_handler(message: types.Message, state: FSMContext):
 @router.message(Document.conversation, F.text.lower() == "удалить старые версии")
 async def delete_old_versions_handler(message: types.Message, state: FSMContext):
     data = await state.get_data()
+    data.update({"document_name": data.pop("document_id")})
     data['user'] = message.from_user.id
     response = await delete_old_versions(data)
     if 199 < response[0] < 300:
