@@ -38,15 +38,11 @@ class GenerateDocumentHandler(CommandHandler[GenerateDocument, Version]):
     document_generation: BaseDocumentGeneration
     s3: BaseS3Repository
 
-    async def handle(self, command: GenerateDocument) -> Version:
+    async def handle(self, command: GenerateDocument) -> tuple[Version, Version]:
         prev_version = await self.document_repository.get_last_version(document_name=command.document_name, user_id=command.user_id)
-
-        # if prev_version:
-        #     new_version = await self.document_generation.generate_document_with_prev_version(command.document_name, message=command.message, prev_version_url=prev_version.version)
-        #     return new_version
-        # else:
         new_version = await self.document_generation.generate_document(document_name=command.document_name, message=command.message)
         await self.s3.upload_new_version(version=new_version)
         new_version.version = self.s3.create_get_url(file_name=str(new_version.id) + ".html")
         await self.document_repository.add_new_version(document_name=command.document_name, version=new_version, user_id=command.user_id)
-        return new_version
+        print(new_version, prev_version)
+        return new_version, prev_version

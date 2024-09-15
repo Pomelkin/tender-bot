@@ -36,4 +36,4 @@ class BaseS3Repository(ABC):
     async def upload_new_version(self, version: Version) -> str: ...
 
     def create_get_url(self, file_name: str) -> str:
-        return f"{self.endpoint_url}/{file_name}"
+        return f"{self.endpoint_get_url}/{file_name}"
