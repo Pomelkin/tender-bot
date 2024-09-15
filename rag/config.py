@@ -5,6 +5,7 @@ from pydantic import Field
 class QdrantSettings(BaseSettings):
     host: str = Field(alias="QDRANT_HOST")
     port: int = Field(alias="QDRANT_PORT")
+    fz44: str = Field(alias="QDRANT_FZ44")
 
 
 class OpenAIEmbeddingsSettings(BaseSettings):
