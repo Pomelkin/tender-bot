@@ -36,7 +36,7 @@ async def generate_agreement_handler(message: types.Message, state: FSMContext):
 async def delete_old_versions_handler(message: types.Message, state: FSMContext):
     data = await state.get_data()
     data.update({"document_name": data.pop("document_id")})
-    data['user'] = message.from_user.id
+    data['user_id'] = message.from_user.id
     response = await delete_old_versions(data)
     if 199 < response[0] < 300:
         await message.answer("История успешно удалена")
