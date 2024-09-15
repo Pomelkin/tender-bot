@@ -2,9 +2,6 @@ import logging
 import functools
 import torch
 from embeddings.config import settings
-from asyncio.locks import Lock
-
-cache_lock = Lock()
 
 
 def configure_logging(level=logging.INFO):
@@ -44,18 +41,17 @@ def cuda_cache_manager():
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
-            with cache_lock:
-                if (
-                    torch.cuda.memory_reserved(settings.device_index)
-                    / 1024**2
-                    * get_total_vram(settings.device_index)
-                    > 0.4
-                ):
-                    logging.info(
-                        f"Starting cache clear: current memory usage: {torch.cuda.memory_reserved(settings.device) / 1024**2} MB"
-                    )
-                    torch.cuda.empty_cache()
-                    LOGGER.info("Cache cleared")
+            if (
+                torch.cuda.memory_reserved(settings.device_index)
+                / 1024**2
+                * get_total_vram(settings.device_index)
+                > 0.4
+            ):
+                logging.info(
+                    f"Starting cache clear: current memory usage: {torch.cuda.memory_reserved(settings.device) / 1024**2} MB"
+                )
+                torch.cuda.empty_cache()
+                LOGGER.info("Cache cleared")
             return result
 
         return wrapper
