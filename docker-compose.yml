@@ -95,7 +95,8 @@ services:
       - main-tender-bot
       - generation
     networks:
-      - tender-bot
+      tender-bot:
+
   bot:
     build:
       context: ./bot/
