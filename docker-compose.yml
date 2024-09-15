@@ -113,6 +113,7 @@ services:
     environment:
       BASE_URL_GENERATE: http://generate
       BASE_URL_RAG: http://rag
+      FRONT_URL: tender-web-nginx
     env_file:
       - bot/.env
     container_name: bot
