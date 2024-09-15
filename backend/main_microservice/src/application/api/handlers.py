@@ -18,7 +18,7 @@ router = APIRouter(tags=["Documents"])
              description="Эндпоинт для генерации нового доп соглашения",
              responses={
                  status.HTTP_201_CREATED: {"model": GenerateDocumentResponseSchema},
-                 status.HTTP_400_BAD_REQUEST: {"model": ErrorSchema},
+                 status.HTTP_406_NOT_ACCEPTABLE: {"model": ErrorSchema},
                  status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": ErrorSchema},
              })
 async def generate_document(document: GenerateDocumentRequestSchema, container: Container = Depends(init_container)):
@@ -26,7 +26,7 @@ async def generate_document(document: GenerateDocumentRequestSchema, container: 
         mediator: Mediator = container.resolve(Mediator)
         versions, *_ = await mediator.handle_command(GenerateDocument(document_name=document.document_name, message=document.message, user_id=document.user_id))
     except ApplicationException as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error": e.message})
+        raise HTTPException(status_code=status.HTTP_406_BAD_REQUEST, detail={"error": e.message})
     except Exception as e:
         raise e
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail={'error': "Непредвиденная ошибка"})
@@ -49,4 +49,4 @@ async def new_version(version_file: Annotated[str, File(..., media_type="text/ht
     except Exception as e:
         raise e
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail={"error": "Непредвиденная ошибка"})
-    return Response(status.HTTP_202_ACCEPTED)
+    return status.HTTP_202_ACCEPTED

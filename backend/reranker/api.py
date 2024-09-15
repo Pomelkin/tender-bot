@@ -71,7 +71,8 @@ class CrossEncoderAPI(ls.LitAPI):
             max_length=512,
         ).to(self.device)
         with torch.no_grad():
-            scores = torch.sigmoid(self.model(**features).logits).squeeze().tolist()
+            model_logits = self.model(**features).logits.squeeze()
+            scores = torch.sigmoid(model_logits).tolist()
 
         best_docs = []
         best_score = 0
