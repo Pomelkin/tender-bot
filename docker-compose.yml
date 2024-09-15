@@ -111,9 +111,9 @@ services:
       context: ./bot/
       dockerfile: Dockerfile
     environment:
-      BASE_URL_GENERATE: http://generate
-      BASE_URL_RAG: http://rag
-      FRONT_URL: tender-web-nginx
+      BASE_URL_GENERATE: http://generate:8000
+      BASE_URL_RAG: http://rag:8000
+      FRONT_URL: tender-web-nginx:8000
     env_file:
       - bot/.env
     container_name: bot
