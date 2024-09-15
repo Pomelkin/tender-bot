@@ -23,7 +23,7 @@ services:
     env_file:
       - backend/main_microservice/.env
     ports:
-      - "8000"
+      - "8300:8000"
     networks:
       tender-bot:
     depends_on:
