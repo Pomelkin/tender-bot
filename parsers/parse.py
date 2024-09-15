@@ -1,8 +1,6 @@
 import cgi
 import os
-import tempfile
 from pathlib import Path
-from typing import BinaryIO
 from urllib.parse import unquote
 
 import docx

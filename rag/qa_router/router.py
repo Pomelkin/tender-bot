@@ -4,8 +4,8 @@ import openai
 from fastapi import APIRouter, HTTPException
 from starlette import status
 
-from qa_router.utils import generate_answer
-from qa_router.schemas import Answer, Input
+from rag.qa_router.utils import generate_answer
+from rag.qa_router.schemas import Answer, Input
 
 router = APIRouter(tags=["QA"])
 

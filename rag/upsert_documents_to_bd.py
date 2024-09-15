@@ -10,11 +10,13 @@ from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from openai import AsyncClient
 
-from rag.src.vector_db.core import qdrant_instance
-from rag.src.vector_db.queries import create_collection, upsert_document
-from schemas import PreparedToUpsertDocuments
+from rag.vector_db.core import qdrant_instance
+from rag.vector_db.queries import create_collection, upsert_document
+from rag.src.schemas import PreparedToUpsertDocuments
 
-openai_client = AsyncClient(base_url="http://pomelk1n-dev.su:8005/v1/", api_key="password")
+openai_client = AsyncClient(
+    base_url="http://pomelk1n-dev.su:8005/v1/", api_key="password"
+)
 
 
 async def create_knowledge_base(file_path: str) -> None:
@@ -42,7 +44,7 @@ async def fill_new_kb(file_name: str, prepared_docs: PreparedToUpsertDocuments) 
 
 
 def parse_contract(text):
-    pattern = r'(^\d+\.\d+)\.\s*((?:(?!^\d+\.\d+\.).|\n)+)'
+    pattern = r"(^\d+\.\d+)\.\s*((?:(?!^\d+\.\d+\.).|\n)+)"
 
     # Поиск совпадений
     matches = re.findall(pattern, text, re.MULTILINE)
@@ -51,7 +53,7 @@ def parse_contract(text):
         result = []
         for match in matches:
             # result[match[0]] = match[1].strip()  # Убираем лишние пробелы
-            result.append((match[0] + '\n' + match[1]))
+            result.append((match[0] + "\n" + match[1]))
         return result
     else:
         return [text]
@@ -80,20 +82,24 @@ async def process_document(file_path: str) -> PreparedToUpsertDocuments:
 
     flat_docs_list = [Document(page_content=page_content) for page_content in final]
 
-    prepared_docs = {"ids": [], 'payloads': [], 'vectors': []}
+    prepared_docs = {"ids": [], "payloads": [], "vectors": []}
 
-    result = await create_embeddings(list(map(lambda x: x.page_content, flat_docs_list)))
+    result = await create_embeddings(
+        list(map(lambda x: x.page_content, flat_docs_list))
+    )
 
     for num, doc in enumerate(flat_docs_list):
-        prepared_docs['payloads'].append(
-            {'page_content': doc.page_content})
+        prepared_docs["payloads"].append({"page_content": doc.page_content})
         prepared_docs["ids"].append(str(uuid.uuid4()))
-        prepared_docs['vectors'].append(result[num])
+        prepared_docs["vectors"].append(result[num])
 
-    logging.info(
-        f"took {time.perf_counter() - start_time:.4f} seconds"
-    )
+    logging.info(f"took {time.perf_counter() - start_time:.4f} seconds")
 
     return PreparedToUpsertDocuments(**prepared_docs)
 
-asyncio.run(create_knowledge_base(r"C:\Users\desktop\PycharmProjects\tender-bot\documents\final\24000014.docx.txt"))
+
+asyncio.run(
+    create_knowledge_base(
+        r"C:\Users\desktop\PycharmProjects\tender-bot\documents\final\24000014.docx.txt"
+    )
+)
