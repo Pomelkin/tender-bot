@@ -109,7 +109,7 @@ services:
     container_name: bot
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.rag.rule=Host(`bot.localhost`)"
+      - "traefik.http.routers.bot.rule=Host(`bot.localhost`)"
     networks:
       tender-bot:
 
