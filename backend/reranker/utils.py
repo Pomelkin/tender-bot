@@ -45,7 +45,7 @@ def cuda_cache_manager():
                 torch.cuda.memory_reserved(settings.device_index)
                 / 1024**2
                 * get_total_vram(settings.device_index)
-                > 0.4
+                > 0.6
             ):
                 LOGGER.info(
                     f"Starting cache clear: current memory usage: {torch.cuda.memory_reserved(settings.device_index) / 1024**2} MB"
