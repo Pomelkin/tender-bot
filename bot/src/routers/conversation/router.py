@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import InputFile, FSInputFile
 from fastapi import HTTPException
 
-from bot.src.routers.conversation.requests import delete_old_versions
+from routers.conversation.requests import delete_old_versions
 from config import settings
 from routers.conversation.callback_data import DocTypeData
 from routers.conversation.fsm import Document
@@ -35,7 +35,8 @@ async def generate_agreement_handler(message: types.Message, state: FSMContext):
 @router.message(Document.conversation, F.text.lower() == "удалить старые версии")
 async def delete_old_versions_handler(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    data['user'] = message.from_user.id
+    data.update({"document_name": data.pop("document_id")})
+    data['user_id'] = message.from_user.id
     response = await delete_old_versions(data)
     if 199 < response[0] < 300:
         await message.answer("История успешно удалена")
