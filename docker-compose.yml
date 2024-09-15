@@ -115,10 +115,6 @@ services:
     container_name: bot
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bot.rule=Host(`bot.pomelk1n-dev.su`)"
-      - "traefik.http.services.bot.loadbalancer.server.port=8000"
-
-      - "traefik.enable=true"
       - "traefik.http.routers.bot.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/bot`)"
       - "traefik.http.routers.bot.middlewares=bot-strip"
       - "traefik.http.middlewares.bot-strip.stripprefix.prefixes=/bot"
