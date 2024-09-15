@@ -35,8 +35,7 @@ async def generate_agreement_handler(message: types.Message, state: FSMContext):
 async def get_conversation_handler(message: types.Message, state: FSMContext):
     data = await state.get_data()
     document_id = data["document_id"]
-    document_id += ".txt"
-    response = await send_user_query({"vault_id": document_id, "query": message.text})
+    response = await send_user_query({"vault_id": document_id + ".txt", "query": message.text})
     await message.answer(response["content"])
 
 
