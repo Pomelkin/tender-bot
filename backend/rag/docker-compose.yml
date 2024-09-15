@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  rag:
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile
+    environment:
+    - QDRANT_HOST=$QDRANT_HOST
+    - QDRANT_PORT=$QDRANT_PORT
+    - QDRANT_FZ44=$QDRANT_FZ44
+    - OPENAI_HOST=$OPENAI_HOST
+    - OPENAI_PORT=$OPENAI_PORT
+    - GEMMA2_HOST=$GEMMA2_HOST
+    - GEMMA2_PORT=$GEMMA2_PORT
+    - RERANKER_HOST=$RERANKER_HOST
+    - RERANKER_PORT=$RERANKER_PORT
+    ports:
+      - "8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rag.rule=Host(`rag.localhost`)"
+      - "traefik.http.services.rag.loadbalancer.server.port=8000"
+    networks:
+      tender-bot:
+
+networks:
+    tender-bot:
+        external: true
