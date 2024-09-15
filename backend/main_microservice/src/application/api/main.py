@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 import uvicorn
 
-from applicatiion.api.handlers import router as documents
+from application.api.handlers import router as documents
 
 
 def create_app():
     app = FastAPI(
-        title="DataChad",
-        description="DataChad API app",
+        title="Tender-bot",
+        description="Tender API",
         version="0.0.1",
         docs_url="/api/docs",
         redoc_url="/api/redoc",
@@ -18,4 +18,4 @@ def create_app():
 
 
 if __name__ == "__main__":
-    uvicorn.run(create_app(), host="10.14.156.23", port=8000)
+    uvicorn.run(create_app(), host="0.0.0.0", port=8000)

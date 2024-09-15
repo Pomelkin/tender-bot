@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status, HTTPException, BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from punq import Container
 
-from applicatiion.api.schemas import GenerateDocumentRequestSchema, GenerateDocumentResponseSchema
+from application.api.schemas import GenerateDocumentRequestSchema, GenerateDocumentResponseSchema
 from domain.exceptions.base import ApplicationException
 from logic.commands.documents import Consulate, GenerateDocument
 from logic.mediator import Mediator
@@ -17,7 +17,7 @@ router = APIRouter(tags=["Documents"])
 async def generate_document(document: GenerateDocumentRequestSchema = Depends(), container: Container = Depends(init_container)):
     try:
         mediator: Mediator = container.resolve(Mediator)
-        version, *_ = await mediator.handle_command(GenerateDocument(document_name=document.document_name, message=document.message, user_id=document.user_id))
+        versions, *_ = await mediator.handle_command(GenerateDocument(document_name=document.document_name, message=document.message, user_id=document.user_id))
     except ApplicationException as e:
         raise HTTPException(400)
-    return GenerateDocumentResponseSchema.from_entity(version=version)
+    return GenerateDocumentResponseSchema.from_entity(versions)

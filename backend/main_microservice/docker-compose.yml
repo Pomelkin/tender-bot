@@ -1,0 +1,44 @@
+services:
+  main:
+    container_name: main-tender-bot
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      mongodb_host: mongodb
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    expose:
+      - "8000"
+    networks:
+      tender-bot:
+    depends_on:
+      - mongodb
+
+  mongodb:
+    container_name: mongodb-tender-bot
+    image: mongo
+    restart: always
+    #environment:
+    #  MONGO_INITDB_ROOT_USERNAME: root
+    #  MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "27017:27017"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      tender-bot:
+
+networks:
+  tender-bot:
+    external: true
+
+volumes:
+  mongodb-data:
