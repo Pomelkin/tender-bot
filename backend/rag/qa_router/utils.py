@@ -73,7 +73,7 @@ async def create_completion_with_context(context: str, query: str) -> str:
 async def create_base_completion(messages: list) -> str:
     openai_client.base_url = llm_url
     response = await openai_client.chat.completions.create(
-        model="google/gemma-2-9b-it",
+        model="google/gemma-2-27b-it",
         messages=messages,
         temperature=0.0,
         max_tokens=1024,
