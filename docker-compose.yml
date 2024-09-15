@@ -45,7 +45,7 @@ services:
     env_file:
       - backend/generation/.env
     ports:
-      - "8000"
+      - "8100:8000"
 #    labels:
 #      - "traefik.enable=true"
 #      - "traefik.http.routers.generation.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/generation`)"
