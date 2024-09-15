@@ -96,6 +96,18 @@ services:
       - generation
     networks:
       - tender-bot
+  bot:
+    build:
+      context: ./bot/
+      dockerfile: Dockerfile
+    environment:
+      BASE_URL_GENERATE: generate
+      BASE_URL_RAG: rag
+    env_file:
+      - .env
+    container_name: bot
+    networks:
+      tender-bot:
 
 networks:
   tender-bot:
