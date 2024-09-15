@@ -45,7 +45,7 @@ services:
     env_file:
       - backend/generation/.env
     ports:
-      - "8000"
+      - "8100:8000"
 #    labels:
 #      - "traefik.enable=true"
 #      - "traefik.http.routers.generation.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/generation`)"
@@ -111,7 +111,7 @@ services:
       context: ./bot/
       dockerfile: Dockerfile
     environment:
-      BASE_URL_GENERATE: http://generation:8000
+      BASE_URL_GENERATE: http://main-tender-bot:8000
       BASE_URL_RAG: http://rag:8000
       FRONT_URL: tender-web-nginx:8000
     env_file:
