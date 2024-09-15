@@ -10,7 +10,7 @@ from infrastructure.repository.documents.mongo import MongoDocumentRepository
 from infrastructure.s3.base import BaseS3Repository
 from infrastructure.s3.s3 import S3Repository
 from logic.commands.documents import GenerateDocumentHandler, GenerateDocument, UploadNewVersionHandler, \
-    UploadNewVersion
+    UploadNewVersion, DeleteVersionsHandler, DeleteVersions
 from logic.mediator import Mediator
 from config.config import Settings
 
@@ -31,9 +31,11 @@ def init_container():
 
         container.register(GenerateDocumentHandler)
         container.register(UploadNewVersionHandler)
+        container.register(DeleteVersionsHandler)
 
         mediator.register_command(GenerateDocument, [container.resolve(GenerateDocumentHandler)])
         mediator.register_command(UploadNewVersion, [container.resolve(UploadNewVersionHandler)])
+        mediator.register_command(DeleteVersions, [container.resolve(DeleteVersionsHandler)])
 
         return mediator
 

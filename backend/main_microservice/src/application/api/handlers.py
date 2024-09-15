@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends, status, HTTPException, File, Response
 from punq import Container
 
 from application.api.schemas import GenerateDocumentRequestSchema, GenerateDocumentResponseSchema, ErrorSchema, \
-    NewVersionRequestSchema
+    NewVersionRequestSchema, DeleteVersionsRequestSchema
 from domain.exceptions.base import ApplicationException
-from logic.commands.documents import GenerateDocument, UploadNewVersion
+from logic.commands.documents import GenerateDocument, UploadNewVersion, DeleteVersions
 from logic.mediator import Mediator
 from logic import init_container
 
@@ -50,3 +50,21 @@ async def new_version(version_file: Annotated[str, File(..., media_type="text/ht
         raise e
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail={"error": "Непредвиденная ошибка"})
     return status.HTTP_202_ACCEPTED
+
+
+@router.delete("/delete-versions",
+               status_code=status.HTTP_200_OK,
+               description="Удаляет все версии документа, привязанного к пользователю",
+               responses={
+                   status.HTTP_400_BAD_REQUEST: {"model": ErrorSchema},
+                   status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": ErrorSchema},
+               })
+async def delete_versions(document_user: DeleteVersionsRequestSchema, container: Container = Depends(init_container)):
+    try:
+        mediator: Mediator = container.resolve(Mediator)
+        await mediator.handle_command(DeleteVersions(document_name=document_user.document_name, user_id=document_user.user_id))
+    except ApplicationException as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error": e.message})
+    except Exception as e:
+        raise e
+    return status.HTTP_200_OK

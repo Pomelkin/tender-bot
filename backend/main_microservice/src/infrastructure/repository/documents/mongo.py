@@ -29,18 +29,6 @@ class MongoDocumentRepository(BaseDocumentRepository, BaseMongoDBRepository):
     def _generate_collection_name(document_name: str, user_id: int) -> str:
         return document_name + "_" + str(user_id)
 
-    async def create_new_document(self, document: Document) -> ...:
-        await self._db().create_collection(name=str(document.id))
-
-    async def get_document_by_id(self, document_id: str) -> Document:
-        document = await self._collection(str(document_id)).find()
-        document = Document(document_url=document["document_url"], file_type=document["file_type"], customer=document['customer_id'], performer=document['performer_id'])
-        document.versions = [convert_version_mongo_to_entity(version) async for version in self._collection(document_id).find()]
-        return document
-
-    async def get_version(self, document_id: str, version_id: str) -> Version:
-        return convert_version_mongo_to_entity(version=await self._collection(document_id).find_one({"id": str(version_id)}))
-
     async def add_new_version(self, document_name: str, version: Version, user_id: int) -> None:
         await self._collection(self._generate_collection_name(document_name, user_id)).insert_one(version.model_dump())
 
@@ -50,15 +38,5 @@ class MongoDocumentRepository(BaseDocumentRepository, BaseMongoDBRepository):
             return convert_version_mongo_to_entity(version=version)
         return
 
-
-if __name__ == '__main__':
-    rep = MongoDocumentRepository(AsyncIOMotorClient(host="localhost", port=27017), "meta", "documents")
-    async def main():
-        document = Document('sdfd', file_type='pdf', customer=User(123), performer=User(1234))
-        version = Version(parent_document_name=document.id, customer_id=document.customer.telegram_id, performer_id=document.performer.telegram_id, version="sfsfsd")
-        await rep.create_new_document(document=document)
-        await rep.add_new_version(str(document.id), version=version)
-        print(await rep.get_document_by_id(str(document.id)))
-        print(await rep.get_version(document_id=str(document.id), version_id=str(version.id)))
-
-    asyncio.run(main())
+    async def delete_answers(self, document_name: str, user_id: int) -> None:
+        await self._collection(self._generate_collection_name(document_name, user_id)).drop()
