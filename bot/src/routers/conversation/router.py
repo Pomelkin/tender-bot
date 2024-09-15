@@ -5,6 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import InputFile, FSInputFile
 from fastapi import HTTPException
 
+from config import settings
 from routers.conversation.callback_data import DocTypeData
 from routers.conversation.fsm import Document
 from routers.conversation.keyboards import get_choose_doc_type_keyboard, get_generate_keyboard
@@ -50,7 +51,7 @@ async def create_agreement_handler(message: types.Message, state: FSMContext):
 
         diff = ShowDiff(**response)
         await state.update_data(current_url=diff.current_url)
-        url_to_user = f"https://example.com/?url={diff.current_url}"
+        url_to_user = f"http://{settings.FRONT_URL}/?currentId={diff.current_url}&previousId={diff.previous_url}&documentName={document_id}&userId={message.from_user.id}"
         await message.answer(f"Ссылка на соглашение:\n{url_to_user}\n\nЕсли все устраивает - конвертируйте в нужный формат",
                              reply_markup=get_choose_doc_type_keyboard())
 

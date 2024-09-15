@@ -13,6 +13,7 @@ services:
       tender-bot:
 
   main-tender-bot:
+    container_name: main-tender-bot
     build:
       context: ./backend/main_microservice/
       dockerfile: Dockerfile
@@ -35,6 +36,7 @@ services:
       - "traefik.http.services.main-tender-bot.loadbalancer.server.port=8000"
 
   generation:
+    container_name: generation
     build:
       context: ./backend/generation/
       dockerfile: docker/Dockerfile
@@ -73,6 +75,7 @@ services:
       tender-bot:
 
   rag:
+    container_name: rag
     build:
       context: ./backend/rag/
       dockerfile: docker/Dockerfile
