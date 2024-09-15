@@ -9,14 +9,14 @@ from config import settings
 
 
 @asynccontextmanager
-async def send(url: str, method: str, headers: dict, proxy: str, data: dict | bytes = None) -> ClientResponse:
+async def send(url: str, method: str, data: dict | bytes = None) -> ClientResponse:
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         if isinstance(data, bytes):
             request_params = {"data": data}
         else:
             request_params = {"json": data}
 
-        async with session.request(method, url, headers=headers, proxy=proxy, **request_params) as resp:
+        async with session.request(method, url, **request_params) as resp:
             if resp.ok:
                 yield resp
             else:
@@ -26,10 +26,10 @@ async def send(url: str, method: str, headers: dict, proxy: str, data: dict | by
 
 
 async def send_user_query(data: dict) -> dict:
-    async with send(f"{settings.base_url}/...", "POST", data) as resp:
+    async with send(f"{settings.BASE_URL_RAG}/answer", "POST", data) as resp:
         return await resp.json()
 
 
 async def send_create_agreement(data: dict) -> dict:
-    async with send(f"{settings.base_url}/...", "POST", data) as resp:
+    async with send(f"{settings.BASE_URL_GENERATE}/generate-document", "POST", data) as resp:
         return await resp.json()

@@ -6,7 +6,7 @@ from aiogram import Bot, Dispatcher
 from routers.general.router import router as general_router
 from routers.conversation.router import router as conversation_router
 
-from bot.src.config import settings
+from config import settings
 
 dp = Dispatcher()
 dp.include_routers(general_router, conversation_router)

@@ -1,0 +1,11 @@
+services:
+  bot:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      BASE_URL_GENERATE: http://192.168.48.68:65386
+      BASE_URL_RAG: http://example.com
+    env_file:
+      - .env
+    container_name: bot
