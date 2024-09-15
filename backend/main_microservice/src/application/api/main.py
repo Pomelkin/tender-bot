@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 import uvicorn
+from starlette.middleware.cors import CORSMiddleware
 
 from application.api.handlers import router as documents
 
@@ -14,6 +15,19 @@ def create_app():
         debug=True,
     )
     app.include_router(documents)
+
+    origins = [
+        "*"
+    ]
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
     return app
 
 

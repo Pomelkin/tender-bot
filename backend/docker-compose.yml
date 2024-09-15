@@ -53,6 +53,21 @@ services:
     networks:
       tender-bot:
 
+  rag:
+    build:
+      context: ./rag/
+      dockerfile: docker/Dockerfile
+    env_file:
+      - rag/.env
+    ports:
+      - "8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rag.rule=Host(`rag.localhost`)"
+      - "traefik.http.services.rag.loadbalancer.server.port=8000"
+    networks:
+      tender-bot:
+
   reverse-proxy:
     image: traefik:v3.1
     command: --api.insecure=true --providers.docker

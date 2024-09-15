@@ -5,7 +5,6 @@ from fastapi import UploadFile
 from domain.entities.document import Document
 from domain.entities.version import Version
 
-from infrastructure.integration.consultation.base import ConsultationService
 from infrastructure.integration.document_generation.base import BaseDocumentGeneration
 from infrastructure.repository.documents.base import BaseDocumentRepository
 from infrastructure.s3.base import BaseS3Repository

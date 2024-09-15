@@ -13,7 +13,6 @@ services:
       tender-bot:
     depends_on:
       - mongodb
-    scale: 2
     labels:
       - "traefik.http.routers.main.rule=Host(`app.localhost`)"
 
