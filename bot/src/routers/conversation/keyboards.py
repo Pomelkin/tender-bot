@@ -6,7 +6,7 @@ from routers.conversation.callback_data import DocTypeData
 
 def get_generate_keyboard() -> ReplyKeyboardMarkup:
     keyboard = ReplyKeyboardBuilder()
-    keyboard.row(KeyboardButton(text="Сгенерировать соглашение"))
+    keyboard.row(KeyboardButton(text="Сгенерировать соглашение"), KeyboardButton(text="Удалить старые версии"))
     keyboard.adjust()
     return keyboard.as_markup(resize_keyboard=True)
 
