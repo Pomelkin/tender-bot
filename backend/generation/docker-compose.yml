@@ -8,3 +8,4 @@ services:
     container_name: generation
     ports:
       - "8000:8000"
+    

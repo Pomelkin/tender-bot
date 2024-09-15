@@ -3,7 +3,6 @@ from io import BytesIO
 import docx
 from bs4 import BeautifulSoup
 from PyPDF2 import PdfReader
-
 from spire.doc import Document as SpireDocument
 
 
@@ -37,7 +36,6 @@ class DocumentReader:
 
         text = document.GetText()
         return text[71:]
-        pass
 
     async def _read_html(self, bytesio_obj: BytesIO) -> str:
         """

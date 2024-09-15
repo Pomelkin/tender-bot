@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     s3_secret_key: str
     s3_endpoint_url: str
     s3_bucket_name: str
+    rag_service_url: str = Field(
+        default="http://10.14.144.166:8005",
+    )
 
 
 settings = Settings()

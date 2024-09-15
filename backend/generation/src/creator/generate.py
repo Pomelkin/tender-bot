@@ -1,21 +1,22 @@
 import logging
+import re
 from datetime import datetime
 
-from generation.src.utils.clients import client_author, client_editor
 from generation.src.creator.html import get_html
 from generation.src.creator.prompts import (
     author_prompt,
     author_system_prompt,
     editor_prompt,
     entity_extractor_prompt,
+    verdict_prompt,
 )
+from generation.src.utils.clients import client_author, client_editor
 
 
 class Generator:
-    def __init__(self, max_tokens=1024):
-        self.max_tokens = max_tokens
-
-    async def _author_generate(self, system_message, user_message) -> str:
+    async def _author_generate(
+        self, system_message, user_message, max_tokens=1024
+    ) -> str:
         """
         Generate text using the author model.
 
@@ -32,12 +33,12 @@ class Generator:
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": user_message},
             ],
-            max_tokens=self.max_tokens,
+            max_tokens=max_tokens,
             temperature=0.0,
         )
         return completion.choices[0].message.content
 
-    async def _editor_generate(self, user_message) -> str:
+    async def _editor_generate(self, user_message, max_tokens=1024) -> str:
         """
         Generate text using the editor model.
 
@@ -50,10 +51,26 @@ class Generator:
         completion = await client_editor.chat.completions.create(
             model="google/gemma-2-9b-it",
             messages=[{"role": "user", "content": user_message}],
-            max_tokens=self.max_tokens,
+            max_tokens=max_tokens,
             temperature=0.0,
         )
         return completion.choices[0].message.content
+
+    async def generate_verdict(self, rag_answer) -> bool:
+        editor_generation = await self._editor_generate(
+            user_message=verdict_prompt.format(rag_answer), max_tokens=2
+        )
+        logging.info(editor_generation)
+
+        try:
+            digits = re.sub("\D", "", editor_generation)
+            verdict = bool(int(digits.strip()))
+        except Exception as e:
+            logging.error(f"{e}: {editor_generation}")
+            verdict = False
+
+        logging.info(f"Verdict: {verdict}")
+        return verdict
 
     async def generate(self, text, query) -> str:
         """
@@ -80,7 +97,7 @@ class Generator:
         )
 
         entities = entities_str.split("\n")
-
+        
         try:
             number = entities[0]
             place = entities[1]
