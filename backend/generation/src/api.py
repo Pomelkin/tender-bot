@@ -23,13 +23,11 @@ app.add_middleware(
 @app.post("/create")
 async def create_route(generation_request: GenerationRequest) -> Response:
     html_file = await create(generation_request.document_name, generation_request.query)
-
+    print(generation_request.document_name.split('.')[0] + '.html')
     return Response(
         content=html_file.getvalue(),
         media_type="text/html",
-        headers={
-            "Content-Disposition": f"attachment; filename={generation_request.document_name.split('.')[0] + '.html'}"
-        },
+
     )
 
 

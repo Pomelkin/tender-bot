@@ -4,7 +4,7 @@ import docx
 from bs4 import BeautifulSoup
 from PyPDF2 import PdfReader
 
-# from spire.doc import Document as SpireDocument
+from spire.doc import Document as SpireDocument
 
 
 class DocumentReader:
@@ -28,15 +28,15 @@ class DocumentReader:
             text += para.text + "\n"
         return text
 
-    async def _read_doc(bytesio_obj: BytesIO) -> str:
+    async def _read_doc(self, bytesio_obj: BytesIO) -> str:
         """
         Reads a .doc file from a BytesIO object and returns its text content as a string.
         """
-        """document = SpireDocument()
+        document = SpireDocument()
         document.LoadFromStream(bytesio_obj)
 
         text = document.GetText()
-        return text[71:]"""
+        return text[71:]
         pass
 
     async def _read_html(self, bytesio_obj: BytesIO) -> str:
