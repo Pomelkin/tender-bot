@@ -11,6 +11,7 @@ class Settings(BaseSettings):
 
     BASE_URL_GENERATE: str
     BASE_URL_RAG: str
+    FRONT_URL: str
 
 
 settings = Settings()
