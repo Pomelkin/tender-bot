@@ -24,6 +24,8 @@ async def generate_answer(input: Input):
     result_from_fz = await search_relevant_chunks(
         vault_id=settings.qdrant.fz44, vector=embedding, top_k=6
     )
+    print(f"result_from_doc: {result_from_doc}")
+    print(f"result_from_fz: {result_from_fz}")
 
     doc_payloads = [x.page_content for x in result_from_doc]
     fz_payloads = [x.page_content for x in result_from_fz]
@@ -36,9 +38,13 @@ async def generate_answer(input: Input):
         documents=fz_payloads,
     )
 
-    ranked_result = ranked_doc_payloads + ranked_fz_payloads
-
-    text = "\n\n".join(ranked_result)
+    print("Number of documents:", len(ranked_doc_payloads))
+    print("Number of fz:", len(ranked_fz_payloads))
+    
+    doc_payloads = "Информация из контракта:" + "\n\n".join(ranked_doc_payloads)
+    fz_payloads = "Информация из Федерального закона №44 о закупках:" + "\n\n".join(ranked_fz_payloads)
+    
+    text = doc_payloads + '\n\n' + fz_payloads
     print(text)
 
     answer = await create_completion_with_context(query=input.query, context=text)

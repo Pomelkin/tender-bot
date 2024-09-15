@@ -16,14 +16,4 @@ services:
     - RERANKER_HOST=$RERANKER_HOST
     - RERANKER_PORT=$RERANKER_PORT
     ports:
-      - "8000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.rag.rule=Host(`rag.localhost`)"
-      - "traefik.http.services.rag.loadbalancer.server.port=8000"
-    networks:
-      tender-bot:
-
-networks:
-    tender-bot:
-        external: true
+      - "8005:8000"
