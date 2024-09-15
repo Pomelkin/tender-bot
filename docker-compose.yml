@@ -110,6 +110,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bot.rule=Host(`bot.localhost`)"
+      - "traefik.http.services.rag.loadbalancer.server.port=8000"
     networks:
       tender-bot:
 
