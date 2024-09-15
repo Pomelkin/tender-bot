@@ -24,7 +24,7 @@ def load_excel_file(file_path: str) -> pd.DataFrame | None:
 def download_file(url: str, output_folder: str) -> None:
     """Download a file from a URL and save it to the output folder"""
     try:
-        response = requests.get(url, stream=True, allow_redirects=True)
+        response = requests._get(url, stream=True, allow_redirects=True)
         response.raise_for_status()
 
         file_name = None
@@ -111,6 +111,6 @@ if __name__ == "__main__":
     # output_folder = Path("../documents/docs").resolve()
     # download_files_from_excel(str(file_path), url_column_name, str(output_folder))
 
-    input_folder = Path("../documents/docs").resolve()
-    output_folder = Path("../documents/txts").resolve()
+    input_folder = Path("../documents/raw").resolve()
+    output_folder = Path("../documents/final").resolve()
     parse_files_to_txt(str(input_folder), str(output_folder))
