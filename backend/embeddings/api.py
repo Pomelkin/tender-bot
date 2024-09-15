@@ -1,6 +1,6 @@
 import litserve as ls
 import torch
-from embeddings.utils import LOGGER
+from embeddings.utils import LOGGER, cuda_cache_manager
 from embeddings.schemas import EmbeddingsRequest, Embedding, EmbeddingsResponse
 from embeddings.config import settings
 from transformers import AutoTokenizer, AutoModel
@@ -52,6 +52,7 @@ class EmbeddingsAPI(ls.LitAPI):
             request.input = [request.input]
         return request.input
 
+    @cuda_cache_manager()
     def predict(self, x, **kwargs):
         """
         Run the model on the input and return the output.

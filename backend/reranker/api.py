@@ -2,7 +2,7 @@ import litserve as ls
 import torch
 from reranker.schemas import RerankerRequest
 from reranker.config import settings
-from reranker.utils import LOGGER
+from reranker.utils import LOGGER, cuda_cache_manager
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 
@@ -54,6 +54,7 @@ class CrossEncoderAPI(ls.LitAPI):
         """
         return request.model_dump()
 
+    @cuda_cache_manager()
     def predict(self, x, **kwargs):
         """
         Run the model on the input and return the output.

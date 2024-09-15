@@ -31,7 +31,10 @@ async def generate_answer(input: Input):
     ranked_doc_payloads = await reranker.rerank(
         query=input.query, documents=doc_payloads
     )
-    ranked_fz_payloads = await reranker.rerank(query=input.query, documents=fz_payloads)
+    ranked_fz_payloads = await reranker.rerank(
+        query=input.query,
+        documents=fz_payloads,
+    )
 
     ranked_result = ranked_doc_payloads + ranked_fz_payloads
 

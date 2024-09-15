@@ -1,4 +1,11 @@
 import logging
+import functools
+import torch
+import asyncio
+from embeddings.config import settings
+from asyncio.locks import Lock
+
+cache_lock = Lock()
 
 
 def configure_logging(level=logging.INFO):
@@ -15,3 +22,43 @@ def configure_logging(level=logging.INFO):
 
 LOGGER = logging.getLogger()
 configure_logging()
+
+
+@functools.lru_cache(maxsize=1)
+def get_total_vram(device_index=0):
+    """
+    Get the total VRAM of the GPU.
+
+    :param device_index: Index of the GPU device (default is 0)
+    :return: Total VRAM in MB
+    """
+    if not torch.cuda.is_available():
+        raise RuntimeError("CUDA is not available")
+
+    device_properties = torch.cuda.get_device_properties(device_index)
+    total_vram = device_properties.total_memory / 1024**2  # Convert bytes to MB
+    return total_vram
+
+
+def cuda_cache_manager():
+    def decorator(func):
+        @functools.wraps(func)
+        async def wrapper(*args, **kwargs):
+            result = await func(*args, **kwargs)
+            async with cache_lock:
+                if (
+                    torch.cuda.memory_reserved(settings.device_index)
+                    / 1024**2
+                    * get_total_vram(settings.device_index)
+                    > 0.4
+                ):
+                    logging.info(
+                        f"Starting cache clear: current memory usage: {torch.cuda.memory_reserved(settings.device) / 1024**2} MB"
+                    )
+                    await asyncio.to_thread(torch.cuda.empty_cache)
+                    LOGGER.info("Cache cleared")
+            return result
+
+        return wrapper
+
+    return decorator
