@@ -1,7 +1,6 @@
 import logging
 import functools
 import torch
-import asyncio
 from embeddings.config import settings
 from asyncio.locks import Lock
 
@@ -43,9 +42,9 @@ def get_total_vram(device_index=0):
 def cuda_cache_manager():
     def decorator(func):
         @functools.wraps(func)
-        async def wrapper(*args, **kwargs):
-            result = await func(*args, **kwargs)
-            async with cache_lock:
+        def wrapper(*args, **kwargs):
+            result = func(*args, **kwargs)
+            with cache_lock:
                 if (
                     torch.cuda.memory_reserved(settings.device_index)
                     / 1024**2
@@ -55,7 +54,7 @@ def cuda_cache_manager():
                     logging.info(
                         f"Starting cache clear: current memory usage: {torch.cuda.memory_reserved(settings.device) / 1024**2} MB"
                     )
-                    await asyncio.to_thread(torch.cuda.empty_cache)
+                    torch.cuda.empty_cache()
                     LOGGER.info("Cache cleared")
             return result
 
