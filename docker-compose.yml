@@ -28,12 +28,12 @@ services:
       tender-bot:
     depends_on:
       - mongodb
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.main-tender-bot.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/main-tender-bot`)"
-      - "traefik.http.routers.main-tender-bot.middlewares=main-tender-bot-strip"
-      - "traefik.http.middlewares.main-tender-bot-strip.stripprefix.prefixes=/main-tender-bot"
-      - "traefik.http.services.main-tender-bot.loadbalancer.server.port=8000"
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.main-tender-bot.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/main-tender-bot`)"
+#      - "traefik.http.routers.main-tender-bot.middlewares=main-tender-bot-strip"
+#      - "traefik.http.middlewares.main-tender-bot-strip.stripprefix.prefixes=/main-tender-bot"
+#      - "traefik.http.services.main-tender-bot.loadbalancer.server.port=8000"
 
   generation:
     container_name: generation
@@ -41,17 +41,17 @@ services:
       context: ./backend/generation/
       dockerfile: docker/Dockerfile
     environment:
-      RAG_SERVICE_URL: rag
+      RAG_SERVICE_URL: http://rag
     env_file:
       - backend/generation/.env
     ports:
       - "8000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.generation.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/generation`)"
-      - "traefik.http.routers.generation.middlewares=generation-strip"
-      - "traefik.http.middlewares.generation-strip.stripprefix.prefixes=/generation"
-      - "traefik.http.services.generation.loadbalancer.server.port=8000"
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.generation.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/generation`)"
+#      - "traefik.http.routers.generation.middlewares=generation-strip"
+#      - "traefik.http.middlewares.generation-strip.stripprefix.prefixes=/generation"
+#      - "traefik.http.services.generation.loadbalancer.server.port=8000"
     networks:
       tender-bot:
 
@@ -83,45 +83,46 @@ services:
       - backend/rag/.env
     ports:
       - "8000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.rag.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/rag`)"
-      - "traefik.http.routers.rag.middlewares=rag-strip"
-      - "traefik.http.middlewares.rag-strip.stripprefix.prefixes=/rag"
-      - "traefik.http.services.rag.loadbalancer.server.port=8000"
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.rag.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/rag`)"
+#      - "traefik.http.routers.rag.middlewares=rag-strip"
+#      - "traefik.http.middlewares.rag-strip.stripprefix.prefixes=/rag"
+#      - "traefik.http.services.rag.loadbalancer.server.port=8000"
     networks:
       tender-bot:
 
-  reverse-proxy:
-    image: traefik:v3.1
-    command: --api.insecure=true --providers.docker
-    ports:
-      - "80:80"
-      - "8080:8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - main-tender-bot
-      - generation
-    networks:
-      tender-bot:
+#  reverse-proxy:
+#    image: traefik:v3.1
+#    command: --api.insecure=true --providers.docker
+#    ports:
+#      - "80:80"
+#      - "8080:8080"
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    depends_on:
+#      - main-tender-bot
+#      - generation
+#    networks:
+#      tender-bot:
 
   bot:
     build:
       context: ./bot/
       dockerfile: Dockerfile
     environment:
-      BASE_URL_GENERATE: generate
-      BASE_URL_RAG: rag
+      BASE_URL_GENERATE: http://generation:8000
+      BASE_URL_RAG: http://rag:8000
+      FRONT_URL: tender-web-nginx:8000
     env_file:
       - bot/.env
     container_name: bot
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.bot.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/bot`)"
-      - "traefik.http.routers.bot.middlewares=bot-strip"
-      - "traefik.http.middlewares.bot-strip.stripprefix.prefixes=/bot"
-      - "traefik.http.services.bot.loadbalancer.server.port=8000"
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.bot.rule=Host(`pomelk1n-dev.su`) && PathPrefix(`/bot`)"
+#      - "traefik.http.routers.bot.middlewares=bot-strip"
+#      - "traefik.http.middlewares.bot-strip.stripprefix.prefixes=/bot"
+#      - "traefik.http.services.bot.loadbalancer.server.port=8000"
     networks:
       tender-bot:
 
