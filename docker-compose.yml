@@ -39,7 +39,7 @@ services:
       context: ./backend/generation/
       dockerfile: docker/Dockerfile
     environment:
-      RAG_SERVICE_URL: rag
+      RAG_SERVICE_URL: http://rag
     env_file:
       - backend/generation/.env
     ports:
@@ -108,8 +108,8 @@ services:
       context: ./bot/
       dockerfile: Dockerfile
     environment:
-      BASE_URL_GENERATE: generate
-      BASE_URL_RAG: rag
+      BASE_URL_GENERATE: http://generate
+      BASE_URL_RAG: http://rag
     env_file:
       - bot/.env
     container_name: bot
