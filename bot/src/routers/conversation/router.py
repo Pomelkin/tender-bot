@@ -40,6 +40,7 @@ async def delete_old_versions_handler(message: types.Message, state: FSMContext)
     response = await delete_old_versions(data)
     if 199 < response[0] < 300:
         await message.answer("История успешно удалена")
+    await state.set_state(Document.conversation)
 
 
 @router.message(Document.conversation)
