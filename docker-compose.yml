@@ -9,3 +9,97 @@ services:
       - "6334:6334"
     volumes:
       - $PWD/qdrant_storage:/qdrant/storage:z
+    networks:
+      tender-bot:
+
+  main-tender-bot:
+    build:
+      context: ./backend/main_microservice/
+      dockerfile: Dockerfile
+    environment:
+      MONGODB_HOST: mongodb
+      GENERATION_DOCUMENT_HOST: generation
+    env_file:
+      - backend/main_microservice/.env
+    ports:
+      - "8000"
+    networks:
+      tender-bot:
+    depends_on:
+      - mongodb
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tender.rule=Host(`app.localhost`)"
+      - "traefik.http.services.tender.loadbalancer.server.port=8000"
+
+  generation:
+    build:
+      context: ./backend/generation/
+      dockerfile: docker/Dockerfile
+    environment:
+      RAG_SERVICE_URL: rag
+    env_file:
+      - backend/generation/.env
+    ports:
+      - "8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.generation.rule=Host(`generation.localhost`)"
+      - "traefik.http.services.generation.loadbalancer.server.port=8000"
+    networks:
+      tender-bot:
+
+  mongodb:
+    container_name: mongodb-tender-bot
+    image: mongo
+    restart: always
+    #environment:
+    #  MONGO_INITDB_ROOT_USERNAME: root
+    #  MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "27017:27017"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      tender-bot:
+
+  rag:
+    build:
+      context: ./backend/rag/
+      dockerfile: docker/Dockerfile
+    env_file:
+      - backend/rag/.env
+    ports:
+      - "8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rag.rule=Host(`rag.localhost`)"
+      - "traefik.http.services.rag.loadbalancer.server.port=8000"
+    networks:
+      tender-bot:
+
+  reverse-proxy:
+    image: traefik:v3.1
+    command: --api.insecure=true --providers.docker
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - main-tender-bot
+      - generation
+    networks:
+      - tender-bot
+
+networks:
+  tender-bot:
+    external: true
+
+volumes:
+  mongodb-data:

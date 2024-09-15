@@ -1,4 +1,6 @@
+import tempfile
 from io import BytesIO
+from typing import BinaryIO
 
 import docx
 from bs4 import BeautifulSoup
@@ -28,16 +30,16 @@ class DocumentReader:
             text += para.text + "\n"
         return text
 
-    async def _read_doc(self, bytesio_obj: BytesIO) -> str:
-        """
-        Reads a .doc file from a BytesIO object and returns its text content as a string.
-        """
-        document = SpireDocument()
-        document.LoadFromStream(bytesio_obj)
+    async def _doc_reader(self, doc_bytes: BinaryIO) -> str:
+        with tempfile.NamedTemporaryFile(delete=True, suffix=".doc") as tmp:
+            tmp.write(doc_bytes.read())
+            tmp.seek(0)
 
-        text = document.GetText()
-        return text[71:]
-        pass
+            document = SpireDocument()
+            document.LoadFromFile(tmp.name)
+
+            text = document.GetText()
+            return text[71:]
 
     async def _read_html(self, bytesio_obj: BytesIO) -> str:
         """
@@ -58,7 +60,7 @@ class DocumentReader:
         elif file_type == "docx":
             return await self._read_docx(bytesio_obj)
         elif file_type == "doc":
-            return await self._read_doc(bytesio_obj)
+            return await self._doc_reader(bytesio_obj)
         elif file_type == "html":
             return await self._read_html(bytesio_obj)
         else:

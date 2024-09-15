@@ -26,7 +26,7 @@ async def generate_document(document: GenerateDocumentRequestSchema, container: 
         mediator: Mediator = container.resolve(Mediator)
         versions, *_ = await mediator.handle_command(GenerateDocument(document_name=document.document_name, message=document.message, user_id=document.user_id))
     except ApplicationException as e:
-        raise HTTPException(status_code=status.HTTP_406_BAD_REQUEST, detail={"error": e.message})
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail={"error": e.message})
     except Exception as e:
         raise e
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail={'error': "Непредвиденная ошибка"})
