@@ -22,11 +22,12 @@ React Web application's code is available [here](https://github.com/Sh6abrA/Tend
 - **RAG (Retrieval-Augmented Generation)**: Used for consultation services, integrating large language models (LLMs) and document search and ranking mechanisms.
 
 ### AI Models
-- **Gemma2 27B**: Generates responses based on context and performs text rephrasing.
-- **USER-BGE**: Indexes and searches through contract and legal data, enhancing the accuracy of responses.
-- **Qwen2 7B**: Works with long contexts to extract the essence of user requests.
+- **Gemma2 27B**: Acts as a main LLM, creating responses based on context and performing text rephrasing.
+- **USER-BGE**: Generates embeddings that allow efficient indexing and retrieval of contract and legal document information.
+- **Qwen2 7B**: Works with long contexts to extract the essence of given documents.
+- **cross-encoder-russian-msmarco**: Reranks search results to ensure the most relevant documents are passed to the main LLM.
 
 ### Infrastructure
 - **Distributed Architecture**: The system operates on three servers with optimized language models through vLLM, minimizing latency and ensuring smooth operation.
-- **Data Storage**: Utilizes S3 storage and MongoDB for document storage and data tracking.
+- **Data Storage**: Utilizes S3 storage, MongoDB for document storage and data tracking and Qdrant for storing embeddings and efficiently retrieving relevant documents.
 - **Docker**: Each component of the system is isolated to facilitate updates and ensure stable operation.
