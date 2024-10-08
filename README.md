@@ -11,23 +11,23 @@ This system enables users to consult on legal matters, automatically generate do
 - **Text Rephrasing**: The built-in AI model helps adapt document text based on user requests while maintaining legal accuracy.
 
 ## Technologies
-### Web Interface
+### Web Interface:
 - **React + TypeScript**: Provides flexibility and scalability for building complex interfaces. Strong typing simplifies code maintenance.
 - **Modular FSD Structure**: Ensures scalability, isolates business logic from the interface, and reduces dependencies between modules.
 - **Telegram Bot on Aiogram**: Acts as a frontend, enabling interaction with the system via chat.  
 
 React Web application's code is available [here](https://github.com/Sh6abrA/TenderHackWeb).
-### Backend
+### Backend:
 - **FastAPI**: Built on Domain-Driven Design (DDD) and the C4 model, ensuring scalability and separation of business logic from technical details.
 - **RAG (Retrieval-Augmented Generation)**: Used for consultation services, integrating large language models (LLMs) and document search and ranking mechanisms.
 
-### AI Models
+### AI Models:
 - **Gemma2 27B**: Acts as a main LLM, creating responses based on context and performing text rephrasing.
 - **USER-BGE**: Generates embeddings that allow efficient indexing and retrieval of contract and legal document information.
 - **Qwen2 7B**: Works with long contexts to extract the essence of given documents.
 - **cross-encoder-russian-msmarco**: Reranks search results to ensure the most relevant documents are passed to the main LLM.
 
-### Infrastructure
+### Infrastructure:
 - **Distributed Architecture**: The system operates on three servers with optimized language models through vLLM, minimizing latency and ensuring smooth operation.
 - **Data Storage**: Utilizes S3 storage, MongoDB for document storage and data tracking and Qdrant for storing embeddings and efficiently retrieving relevant documents.
 - **Docker**: Each component of the system is isolated to facilitate updates and ensure stable operation.
