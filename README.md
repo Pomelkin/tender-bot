@@ -31,4 +31,3 @@ React Web application's code is available [here](https://github.com/Sh6abrA/Tend
 - **Distributed Architecture**: The system operates on three servers with optimized language models through vLLM, minimizing latency and ensuring smooth operation.
 - **Data Storage**: Utilizes S3 storage, MongoDB for document storage and data tracking and Qdrant for storing embeddings and efficiently retrieving relevant documents.
 - **Docker**: Each component of the system is isolated to facilitate updates and ensure stable operation.
-
